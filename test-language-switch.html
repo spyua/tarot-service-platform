@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Switch Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #0B0C2A;
+            color: #F5F0E6;
+        }
+        .language-switcher {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(26, 27, 58, 0.8);
+            border: 1px solid #C8A97E;
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+        .language-btn {
+            background: none;
+            border: none;
+            color: #F5F0E6;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        .language-btn:hover,
+        .language-btn.active {
+            background-color: #C8A97E;
+            color: #0B0C2A;
+        }
+        .test-content {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-switcher">
+        <button class="language-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+        <button class="language-btn" data-lang="zh-TW" aria-label="切換到繁體中文">中文</button>
+    </div>
+    
+    <div class="test-content">
+        <h1 data-text="app.title">Whispering Arcana</h1>
+        <p data-text="app.subtitle">Your Digital Spiritual Sanctuary</p>
+        <p data-text="nav.dailyCard">Daily Card</p>
+        <p data-text="nav.formlessReading">Formless Reading</p>
+        
+        <div id="debug-info">
+            <h3>Debug Info:</h3>
+            <p>Current Language: <span id="current-lang">en</span></p>
+            <p>Button clicks: <span id="click-count">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Simple state manager for testing
+        class SimpleStateManager {
+            constructor() {
+                this.state = { currentLanguage: 'en' };
+                this.listeners = new Map();
+            }
+            
+            getState() {
+                return { ...this.state };
+            }
+            
+            setState(updates) {
+                const oldState = { ...this.state };
+                if (typeof updates === 'function') {
+                    this.state = updates(this.state);
+                } else {
+                    this.state = { ...this.state, ...updates };
+                }
+                this.notifyListeners(this.state, oldState);
+                return true;
+            }
+            
+            subscribe(key, callback) {
+                this.listeners.set(key, callback);
+            }
+            
+            notifyListeners(newState, oldState) {
+                this.listeners.forEach(callback => {
+                    try {
+                        callback(newState, oldState);
+                    } catch (error) {
+                        console.error('Listener error:', error);
+                    }
+                });
+            }
+        }
+
+        // Simple language manager for testing
+        class SimpleLanguageManager {
+            constructor(stateManager) {
+                this.stateManager = stateManager;
+                this.currentLanguage = this.stateManager.getState().currentLanguage;
+                this.languageContent = {
+                    en: {
+                        app: {
+                            title: "Whispering Arcana",
+                            subtitle: "Your Digital Spiritual Sanctuary"
+                        },
+                        nav: {
+                            dailyCard: "Daily Card",
+                            formlessReading: "Formless Reading"
+                        }
+                    },
+                    'zh-TW': {
+                        app: {
+                            title: "低語奧秘",
+                            subtitle: "您的數位靈性聖所"
+                        },
+                        nav: {
+                            dailyCard: "每日一牌",
+                            formlessReading: "自由解讀"
+                        }
+                    }
+                };
+                
+                this.stateManager.subscribe('languageManager', (newState, oldState) => {
+                    if (newState.currentLanguage !== oldState.currentLanguage) {
+                        this.currentLanguage = newState.currentLanguage;
+                        this.updateUI();
+                    }
+                });
+            }
+            
+            getText(keyPath) {
+                const keys = keyPath.split('.');
+                let current = this.languageContent[this.currentLanguage];
+                
+                for (const key of keys) {
+                    if (current && current[key]) {
+                        current = current[key];
+                    } else {
+                        return keyPath;
+                    }
+                }
+                
+                return current || keyPath;
+            }
+            
+            setLanguage(language) {
+                if (!['en', 'zh-TW'].includes(language)) {
+                    return false;
+                }
+                
+                return this.stateManager.setState(state => ({
+                    ...state,
+                    currentLanguage: language
+                }));
+            }
+            
+            updateUI() {
+                const elementsWithText = document.querySelectorAll('[data-text]');
+                elementsWithText.forEach(element => {
+                    const textKey = element.getAttribute('data-text');
+                    if (textKey) {
+                        element.textContent = this.getText(textKey);
+                    }
+                });
+                
+                // Update language buttons
+                const languageButtons = document.querySelectorAll('.language-btn');
+                languageButtons.forEach(button => {
+                    const buttonLang = button.getAttribute('data-lang');
+                    if (buttonLang === this.currentLanguage) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+                
+                // Update debug info
+                document.getElementById('current-lang').textContent = this.currentLanguage;
+            }
+        }
+
+        // Initialize
+        const stateManager = new SimpleStateManager();
+        const languageManager = new SimpleLanguageManager(stateManager);
+        let clickCount = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test page initialized');
+            
+            // Add event listeners to language buttons
+            const languageButtons = document.querySelectorAll('.language-btn');
+            
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    clickCount++;
+                    document.getElementById('click-count').textContent = clickCount;
+                    
+                    const selectedLanguage = this.getAttribute('data-lang');
+                    console.log('Button clicked:', selectedLanguage);
+                    
+                    const success = languageManager.setLanguage(selectedLanguage);
+                    console.log('Language switch success:', success);
+                    
+                    if (success) {
+                        console.log('Language switched to:', selectedLanguage);
+                    } else {
+                        console.error('Failed to switch language');
+                    }
+                });
+            });
+            
+            // Initial UI update
+            languageManager.updateUI();
+        });
+    </script>
+</body>
+</html>

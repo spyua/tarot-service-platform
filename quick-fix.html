@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Manager Quick Fix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0B0C2A;
+            color: #F5F0E6;
+        }
+        .fix-button {
+            background: #C8A97E;
+            color: #0B0C2A;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .fix-button:hover {
+            background: #F5F0E6;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(200, 169, 126, 0.1);
+        }
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 3px solid red;
+        }
+        .success {
+            background: rgba(0, 255, 0, 0.1);
+            border-left: 3px solid green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Language Manager Quick Fix</h1>
+    <p>This page will help fix the LanguageManager reference issues in your main application.</p>
+    
+    <div id="status" class="status">
+        <p>Status: Ready to apply fixes</p>
+    </div>
+    
+    <button class="fix-button" onclick="applyFix()">Apply Fix to Main Page</button>
+    <button class="fix-button" onclick="testLanguageManager()">Test LanguageManager</button>
+    <button class="fix-button" onclick="openMainPage()">Open Main Page</button>
+    
+    <div id="output"></div>
+    
+    <script>
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = `<p>${message}</p>`;
+        }
+        
+        function applyFix() {
+            updateStatus('Applying fix...', 'info');
+            
+            // Create a script element to inject the fix
+            const fixScript = document.createElement('script');
+            fixScript.textContent = `
+                // Direct fix for LanguageManager references
+                if (window.parent && window.parent !== window) {
+                    // We're in an iframe, try to fix the parent
+                    try {
+                        const parentWindow = window.parent;
+                        if (parentWindow.LanguageManager) {
+                            console.log('✅ Found LanguageManager in parent window');
+                            
+                            // Fix the parent window's language buttons
+                            const parentButtons = parentWindow.document.querySelectorAll('.language-btn');
+                            console.log('Found', parentButtons.length, 'buttons in parent');
+                            
+                            parentButtons.forEach((button, index) => {
+                                const newButton = button.cloneNode(true);
+                                button.parentNode.replaceChild(newButton, button);
+                                
+                                newButton.addEventListener('click', function(event) {
+                                    event.preventDefault();
+                                    const selectedLanguage = this.getAttribute('data-lang');
+                                    
+                                    if (parentWindow.LanguageManager && parentWindow.LanguageManager.isValidLanguage(selectedLanguage)) {
+                                        const success = parentWindow.LanguageManager.setLanguage(selectedLanguage);
+                                        if (success) {
+                                            console.log('✅ Language switched to:', selectedLanguage);
+                                        }
+                                    }
+                                });
+                            });
+                            
+                            console.log('✅ Parent window buttons fixed');
+                        }
+                    } catch (error) {
+                        console.error('Error fixing parent window:', error);
+                    }
+                } else {
+                    console.log('Not in iframe, applying local fix');
+                }
+            `;
+            
+            document.head.appendChild(fixScript);
+            updateStatus('Fix applied! Check console for details.', 'success');
+        }
+        
+        function testLanguageManager() {
+            updateStatus('Testing LanguageManager...', 'info');
+            
+            // Try to access the main window's LanguageManager
+            let targetWindow = window;
+            if (window.opener) {
+                targetWindow = window.opener;
+            } else if (window.parent && window.parent !== window) {
+                targetWindow = window.parent;
+            }
+            
+            try {
+                if (targetWindow.LanguageManager) {
+                    const debugInfo = targetWindow.LanguageManager.getDebugInfo();
+                    updateStatus(`LanguageManager found! Current language: ${debugInfo.currentLanguage}`, 'success');
+                    
+                    // Test language switching
+                    const currentLang = targetWindow.LanguageManager.getCurrentLanguage();
+                    const newLang = currentLang === 'en' ? 'zh-TW' : 'en';
+                    const success = targetWindow.LanguageManager.setLanguage(newLang);
+                    
+                    if (success) {
+                        updateStatus(`✅ Successfully switched language from ${currentLang} to ${newLang}`, 'success');
+                    } else {
+                        updateStatus(`❌ Failed to switch language`, 'error');
+                    }
+                } else {
+                    updateStatus('❌ LanguageManager not found in target window', 'error');
+                }
+            } catch (error) {
+                updateStatus(`❌ Error testing LanguageManager: ${error.message}`, 'error');
+            }
+        }
+        
+        function openMainPage() {
+            window.open('index.html', '_blank');
+        }
+        
+        // Auto-test on load
+        setTimeout(testLanguageManager, 1000);
+    </script>
+</body>
+</html>

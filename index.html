@@ -282,12 +282,295 @@
             }
         }
         
+        /* ===== 3D CARD ANIMATION SYSTEM ===== */
+        
+        /* Card Container and Base Styles */
+        .card-container {
+            perspective: 1000px;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+        
+        .tarot-card {
+            width: 120px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tarot-card:hover {
+            transform: translateY(-5px) rotateY(5deg);
+            box-shadow: 0 8px 25px rgba(200, 169, 126, 0.4);
+        }
+        
+        /* Card Faces */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, var(--card-gradient-start), var(--card-gradient-end));
+            border: 2px solid var(--matte-gold);
+            color: var(--cream-white);
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, var(--cream-white), #f8f4e6);
+            border: 2px solid var(--matte-gold);
+            color: var(--deep-night-blue);
+            transform: rotateY(180deg);
+        }
+        
+        /* Card Flip Animation States */
+        .tarot-card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .tarot-card.flipping {
+            pointer-events: none;
+        }
+        
+        /* Card Content Styling */
+        .card-back-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        .card-back-symbol {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--matte-gold);
+        }
+        
+        .card-back-text {
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .card-front-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+        
+        .card-name {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .card-keywords {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--matte-gold);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-image-placeholder {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--matte-gold), #d4b896);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--deep-night-blue);
+            margin: 0.5rem 0;
+        }
+        
+        /* Card Arrangement Layouts */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            min-height: 250px;
+        }
+        
+        /* Single Card Layout */
+        .cards-container.layout-single {
+            justify-content: center;
+        }
+        
+        .cards-container.layout-single .tarot-card {
+            width: 150px;
+            height: 250px;
+        }
+        
+        /* Two Card Layout */
+        .cards-container.layout-two {
+            gap: 2rem;
+        }
+        
+        /* Three Card Layout */
+        .cards-container.layout-three {
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+        
+        /* Larger layouts */
+        .cards-container.layout-four,
+        .cards-container.layout-five,
+        .cards-container.layout-six {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        
+        .cards-container.layout-seven,
+        .cards-container.layout-eight,
+        .cards-container.layout-nine {
+            max-width: 700px;
+            margin: 2rem auto;
+        }
+        
+        /* Card Animation Effects */
+        @keyframes cardDraw {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.8);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translateY(-10px) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes cardArrange {
+            0% {
+                transform: translateX(0) translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateX(var(--target-x, 0)) translateY(var(--target-y, 0)) rotate(var(--target-rotation, 0deg));
+            }
+        }
+        
+        @keyframes cardGlow {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 8px 25px rgba(200, 169, 126, 0.6);
+            }
+        }
+        
+        .card-drawing {
+            animation: cardDraw 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .card-arranging {
+            animation: cardArrange 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .card-glowing {
+            animation: cardGlow 2s ease-in-out infinite;
+        }
+        
+        /* Performance Optimizations */
+        .tarot-card,
+        .card-face {
+            will-change: transform;
+        }
+        
+        .cards-container.animating .tarot-card {
+            transform-origin: center center;
+        }
+        
+        /* Responsive Card Sizes */
+        @media (max-width: 768px) {
+            .tarot-card {
+                width: 100px;
+                height: 166px;
+            }
+            
+            .cards-container.layout-single .tarot-card {
+                width: 120px;
+                height: 200px;
+            }
+            
+            .card-name {
+                font-size: 0.8rem;
+            }
+            
+            .card-keywords {
+                font-size: 0.6rem;
+            }
+            
+            .card-image-placeholder {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tarot-card {
+                width: 80px;
+                height: 133px;
+            }
+            
+            .cards-container {
+                gap: 0.5rem;
+            }
+            
+            .card-back-text {
+                font-size: 0.7rem;
+            }
+            
+            .card-name {
+                font-size: 0.7rem;
+            }
+            
+            .card-keywords {
+                font-size: 0.5rem;
+            }
+        }
+        
         /* Accessibility */
         @media (prefers-reduced-motion: reduce) {
             * {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
+            }
+            
+            .tarot-card {
+                transition: none;
+            }
+            
+            .tarot-card:hover {
+                transform: none;
             }
         }
         
@@ -297,6 +580,11 @@
         .language-btn:focus {
             outline: 2px solid var(--matte-gold);
             outline-offset: 2px;
+        }
+        
+        .tarot-card:focus {
+            outline: 3px solid var(--matte-gold);
+            outline-offset: 3px;
         }
     </style>
 </head>
@@ -791,23 +1079,1548 @@
         // Create global state manager instance
         window.AppState = new AppStateManager();
         
+        // ===== LANGUAGE MANAGEMENT SYSTEM =====
+        
+        /**
+         * Language Management System
+         * Handles bilingual content, language switching, and UI updates
+         */
+        class LanguageManager {
+            constructor(stateManager) {
+                this.stateManager = stateManager;
+                this.currentLanguage = this.stateManager.getState().currentLanguage;
+                this.listeners = new Map();
+                
+                // Language content structure
+                this.languageContent = {
+                    en: {
+                        app: {
+                            title: "Whispering Arcana",
+                            subtitle: "Your Digital Spiritual Sanctuary"
+                        },
+                        nav: {
+                            dailyCard: "Daily Card",
+                            formlessReading: "Formless Reading"
+                        },
+                        dailyCard: {
+                            title: "Your Daily Card",
+                            description: "Draw your card for today and discover what the universe has in store for you.",
+                            guidance: "Tap the card to reveal your daily guidance"
+                        },
+                        formlessReading: {
+                            title: "Formless Reading",
+                            description: "Choose between 1-9 cards for a personalized reading experience."
+                        },
+                        footer: {
+                            text: "© 2024 Whispering Arcana - A Digital Spiritual Sanctuary"
+                        }
+                    },
+                    'zh-TW': {
+                        app: {
+                            title: "低語奧秘",
+                            subtitle: "您的數位靈性聖所"
+                        },
+                        nav: {
+                            dailyCard: "每日一牌",
+                            formlessReading: "自由解讀"
+                        },
+                        dailyCard: {
+                            title: "您的每日一牌",
+                            description: "抽取今日的牌卡，探索宇宙為您準備的訊息。",
+                            guidance: "輕觸牌卡以揭示您的每日指引"
+                        },
+                        formlessReading: {
+                            title: "自由解讀",
+                            description: "選擇1-9張牌卡進行個人化的解讀體驗。"
+                        },
+                        footer: {
+                            text: "© 2024 低語奧秘 - 數位靈性聖所"
+                        }
+                    }
+                };
+                
+                // Subscribe to state changes
+                this.stateManager.subscribe('languageManager', (newState, oldState) => {
+                    if (newState.currentLanguage !== oldState.currentLanguage) {
+                        this.currentLanguage = newState.currentLanguage;
+                        this.updateUI();
+                        this.notifyListeners(newState.currentLanguage, oldState.currentLanguage);
+                    }
+                });
+            }
+            
+            getText(keyPath, fallbackLang = 'en') {
+                try {
+                    if (!keyPath) {
+                        return String(keyPath);
+                    }
+                    
+                    let text = this.getTextFromLanguage(keyPath, this.currentLanguage);
+                    
+                    if (!text && this.currentLanguage !== fallbackLang) {
+                        text = this.getTextFromLanguage(keyPath, fallbackLang);
+                    }
+                    
+                    return text || keyPath;
+                } catch (error) {
+                    return String(keyPath);
+                }
+            }
+            
+            getTextFromLanguage(keyPath, language) {
+                try {
+                    const languageData = this.languageContent[language];
+                    if (!languageData) {
+                        return null;
+                    }
+                    
+                    const keys = keyPath.split('.');
+                    let current = languageData;
+                    
+                    for (const key of keys) {
+                        if (current && typeof current === 'object' && key in current) {
+                            current = current[key];
+                        } else {
+                            return null;
+                        }
+                    }
+                    
+                    return typeof current === 'string' ? current : null;
+                } catch (error) {
+                    return null;
+                }
+            }
+            
+            setLanguage(language) {
+                try {
+                    if (!this.isValidLanguage(language)) {
+                        return false;
+                    }
+                    
+                    if (this.currentLanguage === language) {
+                        return true;
+                    }
+                    
+                    const success = this.stateManager.setState(state => ({
+                        ...state,
+                        currentLanguage: language
+                    }));
+                    
+                    if (success) {
+                        document.documentElement.lang = language === 'zh-TW' ? 'zh-TW' : 'en';
+                        return true;
+                    }
+                    
+                    return false;
+                } catch (error) {
+                    return false;
+                }
+            }
+            
+            isValidLanguage(language) {
+                return typeof language === 'string' && ['en', 'zh-TW'].includes(language);
+            }
+            
+            getCurrentLanguage() {
+                return this.currentLanguage;
+            }
+            
+            getAvailableLanguages() {
+                return [
+                    { code: 'en', name: 'English', nativeName: 'English' },
+                    { code: 'zh-TW', name: 'Traditional Chinese', nativeName: '繁體中文' }
+                ];
+            }
+            
+            updateUI() {
+                try {
+                    const elementsWithText = document.querySelectorAll('[data-text]');
+                    
+                    elementsWithText.forEach(element => {
+                        const textKey = element.getAttribute('data-text');
+                        if (textKey) {
+                            const text = this.getText(textKey);
+                            element.textContent = text;
+                        }
+                    });
+                    
+                    this.updateLanguageSwitcher();
+                } catch (error) {
+                    console.error('Error updating UI:', error);
+                }
+            }
+            
+            updateLanguageSwitcher() {
+                try {
+                    const languageButtons = document.querySelectorAll('.language-btn');
+                    
+                    languageButtons.forEach(button => {
+                        const buttonLang = button.getAttribute('data-lang');
+                        if (buttonLang === this.currentLanguage) {
+                            button.classList.add('active');
+                            button.setAttribute('aria-pressed', 'true');
+                        } else {
+                            button.classList.remove('active');
+                            button.setAttribute('aria-pressed', 'false');
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error updating language switcher:', error);
+                }
+            }
+            
+            subscribe(key, callback) {
+                if (typeof callback !== 'function') {
+                    return;
+                }
+                this.listeners.set(key, callback);
+            }
+            
+            unsubscribe(key) {
+                return this.listeners.delete(key);
+            }
+            
+            notifyListeners(newLanguage, oldLanguage) {
+                this.listeners.forEach((callback, key) => {
+                    try {
+                        callback(newLanguage, oldLanguage);
+                    } catch (error) {
+                        console.error(`Error in language listener ${key}:`, error);
+                    }
+                });
+            }
+            
+            getDebugInfo() {
+                return {
+                    currentLanguage: this.currentLanguage,
+                    availableLanguages: Object.keys(this.languageContent),
+                    listenerCount: this.listeners.size,
+                    contentValid: true
+                };
+            }
+        }
+
+        // ===== 3D CARD ANIMATION SYSTEM =====
+        
+        /**
+         * 3D Card Animation Controller
+         * Handles card flip animations, arrangement layouts, and performance monitoring
+         */
+        class AnimationController {
+            constructor(stateManager) {
+                this.stateManager = stateManager;
+                this.activeAnimations = new Map();
+                this.performanceMetrics = {
+                    frameDrops: 0,
+                    averageFrameTime: 0,
+                    lastFrameTime: 0
+                };
+                this.reducedMotion = this.checkReducedMotionPreference();
+                
+                // Bind methods to preserve context
+                this.flipCard = this.flipCard.bind(this);
+                this.arrangeCards = this.arrangeCards.bind(this);
+                this.startBackgroundEffects = this.startBackgroundEffects.bind(this);
+                this.monitorPerformance = this.monitorPerformance.bind(this);
+                
+                // Initialize performance monitoring
+                this.initializePerformanceMonitoring();
+                
+                // Listen for reduced motion preference changes
+                this.setupReducedMotionListener();
+                
+                console.log('AnimationController initialized');
+            }
+            
+            /**
+             * Check if user prefers reduced motion
+             * @returns {boolean} True if reduced motion is preferred
+             */
+            checkReducedMotionPreference() {
+                try {
+                    if (window.matchMedia) {
+                        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    }
+                    return false;
+                } catch (error) {
+                    console.warn('Could not check reduced motion preference:', error);
+                    return false;
+                }
+            }
+            
+            /**
+             * Set up listener for reduced motion preference changes
+             */
+            setupReducedMotionListener() {
+                try {
+                    if (window.matchMedia) {
+                        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+                        mediaQuery.addEventListener('change', (e) => {
+                            this.reducedMotion = e.matches;
+                            console.log('Reduced motion preference changed:', this.reducedMotion);
+                        });
+                    }
+                } catch (error) {
+                    console.warn('Could not set up reduced motion listener:', error);
+                }
+            }
+            
+            /**
+             * Initialize performance monitoring
+             */
+            initializePerformanceMonitoring() {
+                if (typeof performance !== 'undefined' && performance.now) {
+                    this.performanceMetrics.lastFrameTime = performance.now();
+                }
+            }
+            
+            /**
+             * Monitor animation performance
+             * @param {string} animationId - Unique identifier for the animation
+             */
+            monitorPerformance(animationId) {
+                if (typeof performance === 'undefined' || !performance.now) {
+                    return;
+                }
+                
+                const currentTime = performance.now();
+                const frameTime = currentTime - this.performanceMetrics.lastFrameTime;
+                
+                // Update average frame time (simple moving average)
+                this.performanceMetrics.averageFrameTime = 
+                    (this.performanceMetrics.averageFrameTime * 0.9) + (frameTime * 0.1);
+                
+                // Detect frame drops (assuming 60fps target = 16.67ms per frame)
+                if (frameTime > 33) { // More than 2 frames
+                    this.performanceMetrics.frameDrops++;
+                    console.warn(`Frame drop detected in ${animationId}: ${frameTime.toFixed(2)}ms`);
+                }
+                
+                this.performanceMetrics.lastFrameTime = currentTime;
+            }
+            
+            /**
+             * Create a tarot card element with 3D flip structure
+             * @param {Object} cardData - Card data object
+             * @param {Object} options - Configuration options
+             * @returns {HTMLElement} Card element
+             */
+            createCardElement(cardData, options = {}) {
+                const {
+                    size = 'normal',
+                    showBack = true,
+                    clickable = true,
+                    id = null
+                } = options;
+                
+                // Create card container
+                const container = document.createElement('div');
+                container.className = 'card-container';
+                if (id) container.setAttribute('data-card-id', id);
+                
+                // Create card element
+                const card = document.createElement('div');
+                card.className = `tarot-card ${size === 'large' ? 'large' : ''}`;
+                if (clickable) {
+                    card.setAttribute('tabindex', '0');
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('aria-label', `Tarot card: ${cardData.name || 'Unknown'}`);
+                }
+                
+                // Create card back
+                if (showBack) {
+                    const cardBack = document.createElement('div');
+                    cardBack.className = 'card-face card-back';
+                    
+                    const backContent = document.createElement('div');
+                    backContent.className = 'card-back-content';
+                    
+                    const symbol = document.createElement('div');
+                    symbol.className = 'card-back-symbol';
+                    symbol.textContent = '✦';
+                    
+                    const text = document.createElement('div');
+                    text.className = 'card-back-text';
+                    text.textContent = 'Whispering Arcana';
+                    
+                    backContent.appendChild(symbol);
+                    backContent.appendChild(text);
+                    cardBack.appendChild(backContent);
+                    card.appendChild(cardBack);
+                }
+                
+                // Create card front
+                const cardFront = document.createElement('div');
+                cardFront.className = 'card-face card-front';
+                
+                const frontContent = document.createElement('div');
+                frontContent.className = 'card-front-content';
+                
+                // Card name
+                const name = document.createElement('div');
+                name.className = 'card-name';
+                name.textContent = cardData.name || 'Unknown Card';
+                
+                // Card keywords
+                const keywords = document.createElement('div');
+                keywords.className = 'card-keywords';
+                keywords.textContent = (cardData.keywords || []).join(' • ');
+                
+                // Card image placeholder
+                const imagePlaceholder = document.createElement('div');
+                imagePlaceholder.className = 'card-image-placeholder';
+                imagePlaceholder.textContent = cardData.symbol || '◊';
+                
+                frontContent.appendChild(name);
+                frontContent.appendChild(keywords);
+                frontContent.appendChild(imagePlaceholder);
+                cardFront.appendChild(frontContent);
+                card.appendChild(cardFront);
+                
+                container.appendChild(card);
+                return container;
+            }
+            
+            /**
+             * Flip a card with 3D animation
+             * @param {HTMLElement} cardElement - Card element to flip
+             * @param {Function} onComplete - Callback function when animation completes
+             * @param {Object} options - Animation options
+             * @returns {Promise} Promise that resolves when animation completes
+             */
+            flipCard(cardElement, onComplete = null, options = {}) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const {
+                            duration = 800,
+                            direction = 'forward',
+                            delay = 0
+                        } = options;
+                        
+                        // Find the actual card element if container was passed
+                        const card = cardElement.classList.contains('tarot-card') 
+                            ? cardElement 
+                            : cardElement.querySelector('.tarot-card');
+                        
+                        if (!card) {
+                            reject(new Error('Card element not found'));
+                            return;
+                        }
+                        
+                        const animationId = `flip-${Date.now()}-${Math.random()}`;
+                        
+                        // Check for reduced motion
+                        if (this.reducedMotion) {
+                            // Instant flip for reduced motion
+                            if (direction === 'forward') {
+                                card.classList.add('flipped');
+                            } else {
+                                card.classList.remove('flipped');
+                            }
+                            
+                            if (onComplete) onComplete();
+                            resolve();
+                            return;
+                        }
+                        
+                        // Add flipping class to prevent interactions
+                        card.classList.add('flipping');
+                        
+                        // Set custom duration if different from default
+                        if (duration !== 800) {
+                            card.style.transitionDuration = `${duration}ms`;
+                        }
+                        
+                        // Start performance monitoring
+                        this.monitorPerformance(animationId);
+                        
+                        // Apply flip after delay
+                        setTimeout(() => {
+                            if (direction === 'forward') {
+                                card.classList.add('flipped');
+                            } else {
+                                card.classList.remove('flipped');
+                            }
+                            
+                            // Store animation reference
+                            this.activeAnimations.set(animationId, {
+                                element: card,
+                                startTime: performance.now ? performance.now() : Date.now(),
+                                duration: duration
+                            });
+                            
+                        }, delay);
+                        
+                        // Handle animation completion
+                        const handleTransitionEnd = (event) => {
+                            if (event.target === card && event.propertyName === 'transform') {
+                                card.removeEventListener('transitionend', handleTransitionEnd);
+                                card.classList.remove('flipping');
+                                
+                                // Reset custom duration
+                                if (duration !== 800) {
+                                    card.style.transitionDuration = '';
+                                }
+                                
+                                // Clean up animation reference
+                                this.activeAnimations.delete(animationId);
+                                
+                                // Monitor performance
+                                this.monitorPerformance(animationId);
+                                
+                                if (onComplete) onComplete();
+                                resolve();
+                            }
+                        };
+                        
+                        card.addEventListener('transitionend', handleTransitionEnd);
+                        
+                        // Fallback timeout in case transitionend doesn't fire
+                        setTimeout(() => {
+                            if (this.activeAnimations.has(animationId)) {
+                                card.removeEventListener('transitionend', handleTransitionEnd);
+                                card.classList.remove('flipping');
+                                this.activeAnimations.delete(animationId);
+                                
+                                console.warn('Card flip animation timed out, completing manually');
+                                if (onComplete) onComplete();
+                                resolve();
+                            }
+                        }, duration + delay + 100);
+                        
+                    } catch (error) {
+                        console.error('Error in flipCard:', error);
+                        reject(error);
+                    }
+                });
+            }
+            
+            /**
+             * Arrange multiple cards in a layout with animation
+             * @param {Array<HTMLElement>} cardElements - Array of card elements
+             * @param {string} layout - Layout type ('single', 'two', 'three', etc.)
+             * @param {Object} options - Animation options
+             * @returns {Promise} Promise that resolves when all animations complete
+             */
+            arrangeCards(cardElements, layout, options = {}) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const {
+                            staggerDelay = 100,
+                            animationDuration = 1000,
+                            container = null
+                        } = options;
+                        
+                        if (!Array.isArray(cardElements) || cardElements.length === 0) {
+                            resolve();
+                            return;
+                        }
+                        
+                        // Find or create container
+                        let cardsContainer = container;
+                        if (!cardsContainer) {
+                            cardsContainer = cardElements[0].parentElement;
+                            while (cardsContainer && !cardsContainer.classList.contains('cards-container')) {
+                                cardsContainer = cardsContainer.parentElement;
+                            }
+                        }
+                        
+                        if (cardsContainer) {
+                            // Update container layout class
+                            cardsContainer.className = `cards-container layout-${layout}`;
+                            cardsContainer.classList.add('animating');
+                        }
+                        
+                        // Check for reduced motion
+                        if (this.reducedMotion) {
+                            // Instant arrangement for reduced motion
+                            cardElements.forEach((cardElement, index) => {
+                                cardElement.classList.add('card-arranged');
+                            });
+                            
+                            if (cardsContainer) {
+                                cardsContainer.classList.remove('animating');
+                            }
+                            
+                            resolve();
+                            return;
+                        }
+                        
+                        const animationPromises = [];
+                        
+                        cardElements.forEach((cardElement, index) => {
+                            const animationPromise = new Promise((cardResolve) => {
+                                const delay = index * staggerDelay;
+                                
+                                setTimeout(() => {
+                                    // Add drawing animation
+                                    cardElement.classList.add('card-drawing');
+                                    
+                                    // Monitor performance
+                                    this.monitorPerformance(`arrange-${index}`);
+                                    
+                                    // Handle animation completion
+                                    const handleAnimationEnd = (event) => {
+                                        if (event.target === cardElement && event.animationName === 'cardDraw') {
+                                            cardElement.removeEventListener('animationend', handleAnimationEnd);
+                                            cardElement.classList.remove('card-drawing');
+                                            cardElement.classList.add('card-arranged');
+                                            cardResolve();
+                                        }
+                                    };
+                                    
+                                    cardElement.addEventListener('animationend', handleAnimationEnd);
+                                    
+                                    // Fallback timeout
+                                    setTimeout(() => {
+                                        cardElement.removeEventListener('animationend', handleAnimationEnd);
+                                        cardElement.classList.remove('card-drawing');
+                                        cardElement.classList.add('card-arranged');
+                                        cardResolve();
+                                    }, animationDuration + 100);
+                                    
+                                }, delay);
+                            });
+                            
+                            animationPromises.push(animationPromise);
+                        });
+                        
+                        // Wait for all card animations to complete
+                        Promise.all(animationPromises).then(() => {
+                            if (cardsContainer) {
+                                cardsContainer.classList.remove('animating');
+                            }
+                            resolve();
+                        }).catch(reject);
+                        
+                    } catch (error) {
+                        console.error('Error in arrangeCards:', error);
+                        reject(error);
+                    }
+                });
+            }
+            
+            /**
+             * Start background particle effects
+             * @param {HTMLElement} container - Container element for effects
+             */
+            startBackgroundEffects(container = document.body) {
+                if (this.reducedMotion) {
+                    console.log('Background effects disabled due to reduced motion preference');
+                    return;
+                }
+                
+                try {
+                    // Create floating particles
+                    this.createFloatingParticles(container);
+                    
+                    // Add subtle glow effects to interactive elements
+                    this.addGlowEffects();
+                    
+                    console.log('Background effects started');
+                } catch (error) {
+                    console.error('Error starting background effects:', error);
+                }
+            }
+            
+            /**
+             * Create floating particle effects
+             * @param {HTMLElement} container - Container for particles
+             */
+            createFloatingParticles(container) {
+                const particleCount = this.reducedMotion ? 0 : 20;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'floating-particle';
+                    particle.style.cssText = `
+                        position: fixed;
+                        width: 2px;
+                        height: 2px;
+                        background: var(--matte-gold);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        opacity: 0.3;
+                        z-index: 1;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        animation: floatParticle ${10 + Math.random() * 20}s linear infinite;
+                        animation-delay: ${Math.random() * 10}s;
+                    `;
+                    
+                    container.appendChild(particle);
+                }
+                
+                // Add particle animation keyframes if not already present
+                if (!document.querySelector('#particle-animations')) {
+                    const style = document.createElement('style');
+                    style.id = 'particle-animations';
+                    style.textContent = `
+                        @keyframes floatParticle {
+                            0% {
+                                transform: translateY(100vh) translateX(0) rotate(0deg);
+                                opacity: 0;
+                            }
+                            10% {
+                                opacity: 0.3;
+                            }
+                            90% {
+                                opacity: 0.3;
+                            }
+                            100% {
+                                transform: translateY(-100px) translateX(${Math.random() * 200 - 100}px) rotate(360deg);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+            
+            /**
+             * Add glow effects to interactive elements
+             */
+            addGlowEffects() {
+                const interactiveElements = document.querySelectorAll('.feature-btn, .tarot-card');
+                
+                interactiveElements.forEach(element => {
+                    element.addEventListener('mouseenter', () => {
+                        if (!this.reducedMotion) {
+                            element.classList.add('card-glowing');
+                        }
+                    });
+                    
+                    element.addEventListener('mouseleave', () => {
+                        element.classList.remove('card-glowing');
+                    });
+                });
+            }
+            
+            /**
+             * Stop all active animations
+             */
+            stopAllAnimations() {
+                this.activeAnimations.forEach((animation, id) => {
+                    const element = animation.element;
+                    element.classList.remove('flipping', 'card-drawing', 'card-arranging');
+                    
+                    // Remove any custom styles
+                    element.style.transitionDuration = '';
+                });
+                
+                this.activeAnimations.clear();
+                console.log('All animations stopped');
+            }
+            
+            /**
+             * Get performance metrics
+             * @returns {Object} Performance metrics
+             */
+            getPerformanceMetrics() {
+                return {
+                    ...this.performanceMetrics,
+                    activeAnimations: this.activeAnimations.size,
+                    reducedMotion: this.reducedMotion
+                };
+            }
+            
+            /**
+             * Clean up resources
+             */
+            cleanup() {
+                this.stopAllAnimations();
+                
+                // Remove floating particles
+                const particles = document.querySelectorAll('.floating-particle');
+                particles.forEach(particle => particle.remove());
+                
+                // Remove particle animation styles
+                const particleStyles = document.querySelector('#particle-animations');
+                if (particleStyles) {
+                    particleStyles.remove();
+                }
+                
+                console.log('AnimationController cleaned up');
+            }
+        }
+
+        // Create global animation controller instance
+        try {
+            console.log('Creating AnimationController instance...');
+            console.log('AppState exists:', !!window.AppState);
+            console.log('AnimationController class exists:', typeof AnimationController);
+            
+            window.AnimationController = new AnimationController(AppState);
+            console.log('AnimationController instance created successfully');
+            console.log('AnimationController methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(window.AnimationController)));
+        } catch (error) {
+            console.error('Error creating AnimationController instance:', error);
+            console.error('Error stack:', error.stack);
+        }
+
+        // Create global language manager instance
+        try {
+            console.log('Creating LanguageManager instance...');
+            console.log('AppState exists:', !!window.AppState);
+            console.log('LanguageManager class exists:', typeof LanguageManager);
+            
+            window.LanguageManager = new LanguageManager(AppState);
+            console.log('LanguageManager instance created successfully');
+            console.log('LanguageManager methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(window.LanguageManager)));
+        } catch (error) {
+            console.error('Error creating LanguageManager instance:', error);
+            console.error('Error stack:', error.stack);
+        }
+        
         // ===== APPLICATION INITIALIZATION =====
         
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Whispering Arcana - Application initialized');
-            console.log('State Manager Debug Info:', AppState.getDebugInfo());
             
-            // Initialize language from state
-            const currentLanguage = AppState.getState().currentLanguage;
-            document.documentElement.lang = currentLanguage;
+            try {
+                console.log('State Manager Debug Info:', AppState.getDebugInfo());
+            } catch (error) {
+                console.error('Error getting AppState debug info:', error);
+            }
             
-            // Update language button states
-            const languageButtons = document.querySelectorAll('.language-btn');
-            languageButtons.forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLanguage);
+            try {
+                if (window.LanguageManager && typeof window.LanguageManager.getDebugInfo === 'function') {
+                    console.log('Language Manager Debug Info:', LanguageManager.getDebugInfo());
+                } else {
+                    console.error('LanguageManager not properly initialized:', {
+                        exists: !!window.LanguageManager,
+                        hasGetDebugInfo: !!(window.LanguageManager && window.LanguageManager.getDebugInfo),
+                        type: typeof window.LanguageManager
+                    });
+                }
+            } catch (error) {
+                console.error('Error getting LanguageManager debug info:', error);
+            }
+            
+            // Initialize language system
+            initializeLanguageSystem();
+            
+            // Initialize UI with current language
+            LanguageManager.updateUI();
+            
+            // Initialize basic feature navigation
+            initializeFeatureNavigation();
+            
+            // Subscribe to state changes for debugging
+            AppState.subscribe('debug', (newState, oldState) => {
+                console.debug('State changed:', { newState, oldState });
             });
             
-            // Basic feature navigation functionality
+            // Check for reduced motion preference
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                AppState.setStateProperty('preferences.reducedMotion', true);
+                console.info('Reduced motion preference detected and saved');
+            }
+        });
+        
+        /**
+         * Initialize language switching functionality
+         */
+        function initializeLanguageSystem() {
+            try {
+                // Add event listeners to language switcher buttons
+                const languageButtons = document.querySelectorAll('.language-btn');
+                console.log('Found language buttons:', languageButtons.length);
+                
+                languageButtons.forEach((button, index) => {
+                    console.log(`Setting up button ${index}:`, button.getAttribute('data-lang'));
+                    
+                    // Test button visibility and clickability
+                    const rect = button.getBoundingClientRect();
+                    console.log(`Button ${index} position:`, rect);
+                    console.log(`Button ${index} visible:`, rect.width > 0 && rect.height > 0);
+                    
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        console.log('🔥 Button clicked!', this.getAttribute('data-lang'));
+                        
+                        const selectedLanguage = this.getAttribute('data-lang');
+                        console.log('Selected language:', selectedLanguage);
+                        console.log('LanguageManager exists:', !!window.LanguageManager);
+                        console.log('isValidLanguage check:', LanguageManager.isValidLanguage(selectedLanguage));
+                        
+                        if (selectedLanguage && LanguageManager.isValidLanguage(selectedLanguage)) {
+                            console.log('Attempting to set language...');
+                            const success = LanguageManager.setLanguage(selectedLanguage);
+                            console.log('Set language result:', success);
+                            
+                            if (success) {
+                                console.info(`✅ Language switched to: ${selectedLanguage}`);
+                            } else {
+                                console.error(`❌ Failed to switch language to: ${selectedLanguage}`);
+                            }
+                        } else {
+                            console.error(`❌ Invalid language code: ${selectedLanguage}`);
+                        }
+                    });
+                    
+                    // Add keyboard support
+                    button.addEventListener('keydown', function(event) {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            this.click();
+                        }
+                    });
+                });
+                
+                // Set initial language from state
+                const currentLanguage = AppState.getState().currentLanguage;
+                if (currentLanguage && LanguageManager.isValidLanguage(currentLanguage)) {
+                    LanguageManager.setLanguage(currentLanguage);
+                } else {
+                    // Fallback to English if current language is invalid
+                    console.warn('Invalid current language, falling back to English');
+                    LanguageManager.setLanguage('en');
+                }
+                
+                console.info('Language system initialized successfully');
+                
+            } catch (error) {
+                console.error('Error initializing language system:', error);
+            }
+        }
+        
+        // ===== BASIC FEATURE NAVIGATION =====
+        
+        /**
+         * Initialize basic feature navigation
+         */
+        function initializeFeatureNavigation() {
+            const featureButtons = document.querySelectorAll('.feature-btn');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            featureButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const feature = this.getAttribute('data-feature');
+                    
+                    // Hide all sections
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show selected section
+                    const targetSection = document.getElementById(feature + '-section');
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                });
+            });
+        }
+        
+        /**
+         * Initialize animation system
+         */
+        function initializeAnimationSystem() {
+            try {
+                if (window.AnimationController) {
+                    // Start background effects
+                    AnimationController.startBackgroundEffects();
+                    
+                    // Add keyboard support for card interactions
+                    document.addEventListener('keydown', function(event) {
+                        if (event.target.classList.contains('tarot-card') && (event.key === 'Enter' || event.key === ' ')) {
+                            event.preventDefault();
+                            event.target.click();
+                        }
+                    });
+                    
+                    console.info('Animation system initialized successfully');
+                } else {
+                    console.error('AnimationController not available');
+                }
+            } catch (error) {
+                console.error('Error initializing animation system:', error);
+            }
+        }
+    </script>
+</body>
+</html>
+                this.languageContent = {
+                    en: {
+                        // Application UI Text
+                        app: {
+                            title: "Whispering Arcana",
+                            subtitle: "Your Digital Spiritual Sanctuary"
+                        },
+                        nav: {
+                            dailyCard: "Daily Card",
+                            formlessReading: "Formless Reading"
+                        },
+                        dailyCard: {
+                            title: "Your Daily Card",
+                            description: "Draw your card for today and discover what the universe has in store for you.",
+                            guidance: "Tap the card to reveal your daily guidance",
+                            alreadyDrawn: "You have already drawn your card for today",
+                            newDay: "A new day brings new possibilities",
+                            bodyAwareness: "Body Awareness",
+                            mindEmotion: "Mind & Emotion", 
+                            spiritualGrowth: "Spiritual Growth"
+                        },
+                        formlessReading: {
+                            title: "Formless Reading",
+                            description: "Choose between 1-9 cards for a personalized reading experience.",
+                            selectCards: "How many cards would you like to draw?",
+                            drawCards: "Draw Cards",
+                            revealCard: "Click to reveal",
+                            completeReading: "Your Reading is Complete"
+                        },
+                        footer: {
+                            text: "© 2024 Whispering Arcana - A Digital Spiritual Sanctuary"
+                        },
+                        // Card-related text
+                        cards: {
+                            keywords: "Keywords",
+                            meaning: "Meaning",
+                            interpretation: "Interpretation"
+                        },
+                        // Common UI elements
+                        ui: {
+                            loading: "Loading...",
+                            error: "An error occurred",
+                            retry: "Try Again",
+                            close: "Close",
+                            next: "Next",
+                            previous: "Previous",
+                            confirm: "Confirm",
+                            cancel: "Cancel"
+                        }
+                    },
+                    'zh-TW': {
+                        // Application UI Text
+                        app: {
+                            title: "低語奧秘",
+                            subtitle: "您的數位靈性聖所"
+                        },
+                        nav: {
+                            dailyCard: "每日一牌",
+                            formlessReading: "自由解讀"
+                        },
+                        dailyCard: {
+                            title: "您的每日一牌",
+                            description: "抽取今日的牌卡，探索宇宙為您準備的訊息。",
+                            guidance: "輕觸牌卡以揭示您的每日指引",
+                            alreadyDrawn: "您今日已經抽過牌了",
+                            newDay: "新的一天帶來新的可能性",
+                            bodyAwareness: "身體覺察",
+                            mindEmotion: "心靈情感",
+                            spiritualGrowth: "靈性成長"
+                        },
+                        formlessReading: {
+                            title: "自由解讀",
+                            description: "選擇1-9張牌卡進行個人化的解讀體驗。",
+                            selectCards: "您想要抽取幾張牌？",
+                            drawCards: "抽牌",
+                            revealCard: "點擊揭示",
+                            completeReading: "您的解讀已完成"
+                        },
+                        footer: {
+                            text: "© 2024 低語奧秘 - 數位靈性聖所"
+                        },
+                        // Card-related text
+                        cards: {
+                            keywords: "關鍵詞",
+                            meaning: "含義",
+                            interpretation: "解讀"
+                        },
+                        // Common UI elements
+                        ui: {
+                            loading: "載入中...",
+                            error: "發生錯誤",
+                            retry: "重試",
+                            close: "關閉",
+                            next: "下一個",
+                            previous: "上一個",
+                            confirm: "確認",
+                            cancel: "取消"
+                        }
+                    }
+                };
+                
+                // Bind methods to preserve context
+                this.setLanguage = this.setLanguage.bind(this);
+                this.getText = this.getText.bind(this);
+                this.updateUI = this.updateUI.bind(this);
+                this.subscribe = this.subscribe.bind(this);
+                this.unsubscribe = this.unsubscribe.bind(this);
+                
+                // Subscribe to state changes
+                this.stateManager.subscribe('languageManager', (newState, oldState) => {
+                    if (newState.currentLanguage !== oldState.currentLanguage) {
+                        this.currentLanguage = newState.currentLanguage;
+                        this.updateUI();
+                        this.notifyListeners(newState.currentLanguage, oldState.currentLanguage);
+                    }
+                });
+            }
+            
+            /**
+             * Get text content for a specific key path
+             * @param {string} keyPath - Dot-notation path to the text (e.g., 'app.title')
+             * @param {string} fallbackLang - Fallback language if text not found
+             * @returns {string} Localized text or key path if not found
+             */
+            getText(keyPath, fallbackLang = 'en') {
+                try {
+                    // Get text from current language
+                    let text = this.getTextFromLanguage(keyPath, this.currentLanguage);
+                    
+                    // If not found and current language is not fallback, try fallback
+                    if (!text && this.currentLanguage !== fallbackLang) {
+                        text = this.getTextFromLanguage(keyPath, fallbackLang);
+                        if (text) {
+                            console.warn(`Text not found for '${keyPath}' in ${this.currentLanguage}, using ${fallbackLang} fallback`);
+                        }
+                    }
+                    
+                    // Return text or key path as fallback
+                    return text || keyPath;
+                    
+                } catch (error) {
+                    console.error(`Error getting text for '${keyPath}':`, error);
+                    return keyPath;
+                }
+            }
+            
+            /**
+             * Get text from specific language content
+             * @param {string} keyPath - Dot-notation path to the text
+             * @param {string} language - Language code
+             * @returns {string|null} Text content or null if not found
+             */
+            getTextFromLanguage(keyPath, language) {
+                try {
+                    const languageData = this.languageContent[language];
+                    if (!languageData) {
+                        return null;
+                    }
+                    
+                    // Navigate through the object using dot notation
+                    const keys = keyPath.split('.');
+                    let current = languageData;
+                    
+                    for (const key of keys) {
+                        if (current && typeof current === 'object' && key in current) {
+                            current = current[key];
+                        } else {
+                            return null;
+                        }
+                    }
+                    
+                    return typeof current === 'string' ? current : null;
+                    
+                } catch (error) {
+                    console.error(`Error getting text from language ${language}:`, error);
+                    return null;
+                }
+            }
+            
+            /**
+             * Set the current language and update the application state
+             * @param {string} language - Language code ('en' or 'zh-TW')
+             * @returns {boolean} True if language was set successfully
+             */
+            setLanguage(language) {
+                try {
+                    // Validate language code
+                    if (!this.isValidLanguage(language)) {
+                        console.error(`Invalid language code: ${language}`);
+                        return false;
+                    }
+                    
+                    // Check if language is already set
+                    if (this.currentLanguage === language) {
+                        console.debug(`Language already set to ${language}`);
+                        return true;
+                    }
+                    
+                    // Update state
+                    const success = this.stateManager.setState(state => ({
+                        ...state,
+                        currentLanguage: language
+                    }));
+                    
+                    if (success) {
+                        console.info(`Language changed to ${language}`);
+                        // Update HTML lang attribute
+                        document.documentElement.lang = language === 'zh-TW' ? 'zh-TW' : 'en';
+                        return true;
+                    } else {
+                        console.error(`Failed to update state with language ${language}`);
+                        return false;
+                    }
+                    
+                } catch (error) {
+                    console.error(`Error setting language to ${language}:`, error);
+                    return false;
+                }
+            }
+            
+            /**
+             * Validate language code
+             * @param {string} language - Language code to validate
+             * @returns {boolean} True if language is valid
+             */
+            isValidLanguage(language) {
+                return typeof language === 'string' && ['en', 'zh-TW'].includes(language);
+            }
+            
+            /**
+             * Get current language
+             * @returns {string} Current language code
+             */
+            getCurrentLanguage() {
+                return this.currentLanguage;
+            }
+            
+            /**
+             * Get available languages
+             * @returns {Array<Object>} Array of language objects with code and name
+             */
+            getAvailableLanguages() {
+                return [
+                    { code: 'en', name: 'English', nativeName: 'English' },
+                    { code: 'zh-TW', name: 'Traditional Chinese', nativeName: '繁體中文' }
+                ];
+            }
+            
+            /**
+             * Update all UI elements with data-text attributes
+             */
+            updateUI() {
+                try {
+                    // Update all elements with data-text attributes
+                    const elementsWithText = document.querySelectorAll('[data-text]');
+                    
+                    elementsWithText.forEach(element => {
+                        const textKey = element.getAttribute('data-text');
+                        if (textKey) {
+                            const text = this.getText(textKey);
+                            
+                            // Update text content based on element type
+                            if (element.tagName === 'INPUT' && element.type === 'text') {
+                                element.placeholder = text;
+                            } else if (element.tagName === 'INPUT' && (element.type === 'submit' || element.type === 'button')) {
+                                element.value = text;
+                            } else if (element.tagName === 'IMG') {
+                                element.alt = text;
+                            } else {
+                                element.textContent = text;
+                            }
+                        }
+                    });
+                    
+                    // Update language switcher buttons
+                    this.updateLanguageSwitcher();
+                    
+                    console.debug(`UI updated for language: ${this.currentLanguage}`);
+                    
+                } catch (error) {
+                    console.error('Error updating UI:', error);
+                }
+            }
+            
+            /**
+             * Update language switcher button states
+             */
+            updateLanguageSwitcher() {
+                try {
+                    const languageButtons = document.querySelectorAll('.language-btn');
+                    
+                    languageButtons.forEach(button => {
+                        const buttonLang = button.getAttribute('data-lang');
+                        if (buttonLang === this.currentLanguage) {
+                            button.classList.add('active');
+                            button.setAttribute('aria-pressed', 'true');
+                        } else {
+                            button.classList.remove('active');
+                            button.setAttribute('aria-pressed', 'false');
+                        }
+                    });
+                    
+                } catch (error) {
+                    console.error('Error updating language switcher:', error);
+                }
+            }
+            
+            /**
+             * Subscribe to language change events
+             * @param {string} key - Unique key for the listener
+             * @param {Function} callback - Function to call when language changes
+             */
+            subscribe(key, callback) {
+                if (typeof callback !== 'function') {
+                    console.error('Language manager subscribe callback must be a function');
+                    return;
+                }
+                
+                this.listeners.set(key, callback);
+                console.debug(`Language manager subscribed listener: ${key}`);
+            }
+            
+            /**
+             * Unsubscribe from language change events
+             * @param {string} key - Key of the listener to remove
+             */
+            unsubscribe(key) {
+                const removed = this.listeners.delete(key);
+                if (removed) {
+                    console.debug(`Language manager unsubscribed listener: ${key}`);
+                }
+            }
+            
+            /**
+             * Notify all listeners of language changes
+             * @param {string} newLanguage - New language
+             * @param {string} oldLanguage - Previous language
+             */
+            notifyListeners(newLanguage, oldLanguage) {
+                this.listeners.forEach((callback, key) => {
+                    try {
+                        callback(newLanguage, oldLanguage);
+                    } catch (error) {
+                        console.error(`Error in language listener ${key}:`, error);
+                    }
+                });
+            }
+            
+            /**
+             * Add new language content
+             * @param {string} language - Language code
+             * @param {Object} content - Language content object
+             * @returns {boolean} True if content was added successfully
+             */
+            addLanguageContent(language, content) {
+                try {
+                    if (!this.isValidLanguage(language)) {
+                        console.error(`Invalid language code: ${language}`);
+                        return false;
+                    }
+                    
+                    if (!content || typeof content !== 'object') {
+                        console.error('Language content must be an object');
+                        return false;
+                    }
+                    
+                    // Deep merge with existing content
+                    this.languageContent[language] = this.deepMerge(
+                        this.languageContent[language] || {},
+                        content
+                    );
+                    
+                    console.info(`Added content for language: ${language}`);
+                    return true;
+                    
+                } catch (error) {
+                    console.error(`Error adding language content for ${language}:`, error);
+                    return false;
+                }
+            }
+            
+            /**
+             * Deep merge two objects
+             * @param {Object} target - Target object
+             * @param {Object} source - Source object
+             * @returns {Object} Merged object
+             */
+            deepMerge(target, source) {
+                const result = { ...target };
+                
+                for (const key in source) {
+                    if (source.hasOwnProperty(key)) {
+                        if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+                            result[key] = this.deepMerge(result[key] || {}, source[key]);
+                        } else {
+                            result[key] = source[key];
+                        }
+                    }
+                }
+                
+                return result;
+            }
+            
+            /**
+             * Get all text content for current language (for debugging)
+             * @returns {Object} Current language content
+             */
+            getCurrentLanguageContent() {
+                return this.languageContent[this.currentLanguage] || {};
+            }
+            
+            /**
+             * Validate language content structure
+             * @param {Object} content - Content to validate
+             * @returns {boolean} True if content structure is valid
+             */
+            validateLanguageContent(content) {
+                try {
+                    if (!content || typeof content !== 'object') {
+                        return false;
+                    }
+                    
+                    // Check for required sections
+                    const requiredSections = ['app', 'nav', 'dailyCard', 'formlessReading', 'footer'];
+                    for (const section of requiredSections) {
+                        if (!(section in content) || typeof content[section] !== 'object') {
+                            return false;
+                        }
+                    }
+                    
+                    return true;
+                    
+                } catch (error) {
+                    console.error('Error validating language content:', error);
+                    return false;
+                }
+            }
+            
+            /**
+             * Get debug information about the language manager
+             * @returns {Object} Debug information
+             */
+            getDebugInfo() {
+                return {
+                    currentLanguage: this.currentLanguage,
+                    availableLanguages: Object.keys(this.languageContent),
+                    listenerCount: this.listeners.size,
+                    contentValid: this.validateLanguageContent(this.languageContent[this.currentLanguage])
+                };
+            }
+        }
+            console.log('Creating LanguageManager instance...');
+            console.log('AppState exists:', !!window.AppState);
+            console.log('LanguageManager class exists:', typeof LanguageManager);
+            
+            window.LanguageManager = new LanguageManager(AppState);
+            console.log('LanguageManager instance created successfully');
+            console.log('LanguageManager methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(window.LanguageManager)));
+        } catch (error) {
+            console.error('Error creating LanguageManager instance:', error);
+            console.error('Error stack:', error.stack);
+        }
+        
+        // ===== APPLICATION INITIALIZATION =====
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Whispering Arcana - Application initialized');
+            
+            try {
+                console.log('State Manager Debug Info:', AppState.getDebugInfo());
+            } catch (error) {
+                console.error('Error getting AppState debug info:', error);
+            }
+            
+            try {
+                if (window.LanguageManager && typeof window.LanguageManager.getDebugInfo === 'function') {
+                    console.log('Language Manager Debug Info:', LanguageManager.getDebugInfo());
+                } else {
+                    console.error('LanguageManager not properly initialized:', {
+                        exists: !!window.LanguageManager,
+                        hasGetDebugInfo: !!(window.LanguageManager && window.LanguageManager.getDebugInfo),
+                        type: typeof window.LanguageManager
+                    });
+                }
+            } catch (error) {
+                console.error('Error getting LanguageManager debug info:', error);
+            }
+            
+            // Initialize language system
+            initializeLanguageSystem();
+            
+            // Initialize UI with current language
+            LanguageManager.updateUI();
+            
+            // Initialize basic feature navigation
+            initializeFeatureNavigation();
+            
+            // Subscribe to state changes for debugging
+            AppState.subscribe('debug', (newState, oldState) => {
+                console.debug('State changed:', { newState, oldState });
+            });
+            
+            // Check for reduced motion preference
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                AppState.setStateProperty('preferences.reducedMotion', true);
+                console.info('Reduced motion preference detected and saved');
+            }
+        });
+        
+        /**
+         * Initialize language switching functionality
+         */
+        function initializeLanguageSystem() {
+            try {
+                // Add event listeners to language switcher buttons
+                const languageButtons = document.querySelectorAll('.language-btn');
+                console.log('Found language buttons:', languageButtons.length);
+                
+                languageButtons.forEach((button, index) => {
+                    console.log(`Setting up button ${index}:`, button.getAttribute('data-lang'));
+                    
+                    // Test button visibility and clickability
+                    const rect = button.getBoundingClientRect();
+                    console.log(`Button ${index} position:`, rect);
+                    console.log(`Button ${index} visible:`, rect.width > 0 && rect.height > 0);
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        console.log('🔥 Button clicked!', this.getAttribute('data-lang'));
+                        
+                        const selectedLanguage = this.getAttribute('data-lang');
+                        console.log('Selected language:', selectedLanguage);
+                        console.log('LanguageManager exists:', !!window.LanguageManager);
+                        console.log('isValidLanguage check:', LanguageManager.isValidLanguage(selectedLanguage));
+                        
+                        if (selectedLanguage && LanguageManager.isValidLanguage(selectedLanguage)) {
+                            console.log('Attempting to set language...');
+                            const success = LanguageManager.setLanguage(selectedLanguage);
+                            console.log('Set language result:', success);
+                            
+                            if (success) {
+                                console.info(`✅ Language switched to: ${selectedLanguage}`);
+                            } else {
+                                console.error(`❌ Failed to switch language to: ${selectedLanguage}`);
+                            }
+                        } else {
+                            console.error(`❌ Invalid language code: ${selectedLanguage}`);
+                        }
+                    });
+                    
+                    // Add keyboard support
+                    button.addEventListener('keydown', function(event) {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            this.click();
+                        }
+                    });
+                });
+                
+                // Set initial language from state
+                const currentLanguage = AppState.getState().currentLanguage;
+                if (currentLanguage && LanguageManager.isValidLanguage(currentLanguage)) {
+                    LanguageManager.setLanguage(currentLanguage);
+                } else {
+                    // Fallback to English if current language is invalid
+                    console.warn('Invalid current language, falling back to English');
+                    LanguageManager.setLanguage('en');
+                }
+                
+                console.info('Language system initialized successfully');
+                
+            } catch (error) {
+                console.error('Error initializing language system:', error);
+            }
+        }
+        
+        // ===== BASIC FEATURE NAVIGATION =====
+        
+        /**
+         * Initialize basic feature navigation
+         */
+        function initializeFeatureNavigation() {
             const featureButtons = document.querySelectorAll('.feature-btn');
             const contentSections = document.querySelectorAll('.content-section');
             
@@ -831,37 +2644,146 @@
                     this.classList.add('active');
                 });
             });
+        }
+        
+        // ===== LANGUAGE MANAGEMENT TESTS =====
+        
+        /**
+         * Test suite for language management system
+         */
+        function runLanguageManagementTests() {
+            console.log('🧪 Starting Language Management System Tests...\n');
             
-            // Enhanced language switcher with state management
-            languageButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const lang = this.getAttribute('data-lang');
-                    
-                    // Update state
-                    AppState.setState({ currentLanguage: lang });
-                    
-                    // Update button states
-                    languageButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Update document language
-                    document.documentElement.lang = lang;
-                    
-                    console.log('Language switched to:', lang);
-                });
-            });
+            let passed = 0;
+            let failed = 0;
+            let total = 0;
             
-            // Subscribe to state changes for debugging
-            AppState.subscribe('debug', (newState, oldState) => {
-                console.debug('State changed:', { newState, oldState });
-            });
-            
-            // Check for reduced motion preference
-            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                AppState.setStateProperty('preferences.reducedMotion', true);
-                console.info('Reduced motion preference detected and saved');
+            function test(name, testFn) {
+                total++;
+                try {
+                    testFn();
+                    passed++;
+                    console.log(`✅ ${name}`);
+                } catch (error) {
+                    failed++;
+                    console.error(`❌ ${name}: ${error.message}`);
+                }
             }
-        });
+            
+            function assert(condition, message) {
+                if (!condition) {
+                    throw new Error(message);
+                }
+            }
+            
+            // Test 1: Language Manager Initialization
+            test('Language Manager should be initialized', () => {
+                assert(window.LanguageManager, 'LanguageManager should exist');
+                assert(typeof window.LanguageManager.getCurrentLanguage === 'function', 'getCurrentLanguage should be a function');
+                assert(typeof window.LanguageManager.setLanguage === 'function', 'setLanguage should be a function');
+                assert(typeof window.LanguageManager.getText === 'function', 'getText should be a function');
+            });
+            
+            // Test 2: Language Content Structure
+            test('Language content should be properly structured', () => {
+                const englishTitle = window.LanguageManager.getText('app.title');
+                assert(typeof englishTitle === 'string', 'English title should be a string');
+                assert(englishTitle.length > 0, 'English title should not be empty');
+                
+                window.LanguageManager.setLanguage('zh-TW');
+                const chineseTitle = window.LanguageManager.getText('app.title');
+                assert(typeof chineseTitle === 'string', 'Chinese title should be a string');
+                assert(chineseTitle.length > 0, 'Chinese title should not be empty');
+                assert(englishTitle !== chineseTitle, 'Different languages should have different text');
+            });
+            
+            // Test 3: Language Switching
+            test('Language switching should work correctly', () => {
+                const initialLang = window.LanguageManager.getCurrentLanguage();
+                const targetLang = initialLang === 'en' ? 'zh-TW' : 'en';
+                
+                const result = window.LanguageManager.setLanguage(targetLang);
+                assert(result === true, 'setLanguage should return true for valid language');
+                assert(window.LanguageManager.getCurrentLanguage() === targetLang, 'Current language should be updated');
+                
+                const invalidResult = window.LanguageManager.setLanguage('invalid');
+                assert(invalidResult === false, 'setLanguage should return false for invalid language');
+            });
+            
+            // Test 4: Text Retrieval
+            test('Text retrieval should work correctly', () => {
+                window.LanguageManager.setLanguage('en');
+                const validText = window.LanguageManager.getText('app.title');
+                assert(typeof validText === 'string', 'Valid key should return string');
+                
+                const invalidText = window.LanguageManager.getText('nonexistent.key');
+                assert(invalidText === 'nonexistent.key', 'Invalid key should return key path');
+                
+                const nestedText = window.LanguageManager.getText('dailyCard.title');
+                assert(typeof nestedText === 'string', 'Nested key should work');
+            });
+            
+            // Test 5: UI Updates
+            test('UI updates should work correctly', () => {
+                // Create test element
+                const testElement = document.createElement('div');
+                testElement.setAttribute('data-text', 'app.title');
+                testElement.textContent = 'Original Text';
+                document.body.appendChild(testElement);
+                
+                window.LanguageManager.setLanguage('en');
+                window.LanguageManager.updateUI();
+                
+                const expectedText = window.LanguageManager.getText('app.title');
+                assert(testElement.textContent === expectedText, 'UI should update with correct text');
+                
+                // Clean up
+                document.body.removeChild(testElement);
+            });
+            
+            // Test 6: State Persistence
+            test('State persistence should work correctly', () => {
+                const originalLang = window.LanguageManager.getCurrentLanguage();
+                const newLang = originalLang === 'en' ? 'zh-TW' : 'en';
+                
+                window.LanguageManager.setLanguage(newLang);
+                const currentState = window.AppState.getState();
+                assert(currentState.currentLanguage === newLang, 'State should be updated with new language');
+            });
+            
+            // Test 7: Error Handling
+            test('Error handling should work correctly', () => {
+                assert(!window.LanguageManager.setLanguage(null), 'Should reject null language');
+                assert(!window.LanguageManager.setLanguage(undefined), 'Should reject undefined language');
+                assert(!window.LanguageManager.setLanguage(''), 'Should reject empty string');
+                
+                const nullText = window.LanguageManager.getText(null);
+                assert(typeof nullText === 'string', 'Should handle null key gracefully');
+            });
+            
+            // Test 8: Available Languages
+            test('Available languages should be correct', () => {
+                const languages = window.LanguageManager.getAvailableLanguages();
+                assert(Array.isArray(languages), 'Should return array');
+                assert(languages.length === 2, 'Should have 2 languages');
+                
+                const codes = languages.map(lang => lang.code);
+                assert(codes.includes('en'), 'Should include English');
+                assert(codes.includes('zh-TW'), 'Should include Traditional Chinese');
+            });
+            
+            // Print results
+            console.log(`\n📊 Test Results: ${passed}/${total} passed`);
+            if (failed === 0) {
+                console.log('🎉 All language management tests passed!');
+            } else {
+                console.log(`⚠️ ${failed} test(s) failed`);
+            }
+            
+            return { passed, failed, total };
+        }
+        
+
     </script>
 </body>
 </html>

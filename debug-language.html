@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Language Switch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #0B0C2A;
+            color: #F5F0E6;
+        }
+        .language-switcher {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(26, 27, 58, 0.8);
+            border: 1px solid #C8A97E;
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+        .language-btn {
+            background: none;
+            border: none;
+            color: #F5F0E6;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin: 0 2px;
+        }
+        .language-btn:hover,
+        .language-btn.active {
+            background-color: #C8A97E;
+            color: #0B0C2A;
+        }
+        .debug-panel {
+            background: rgba(26, 27, 58, 0.5);
+            border: 1px solid #C8A97E;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .test-content {
+            margin-top: 20px;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(200, 169, 126, 0.1);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-switcher">
+        <button class="language-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+        <button class="language-btn" data-lang="zh-TW" aria-label="切換到繁體中文">中文</button>
+    </div>
+    
+    <h1>Language Switch Debug Tool</h1>
+    
+    <div class="debug-panel">
+        <h3>Debug Information</h3>
+        <div id="debug-info">
+            <p>Current Language: <span id="current-lang">en</span></p>
+            <p>Button Clicks: <span id="click-count">0</span></p>
+            <p>Last Action: <span id="last-action">None</span></p>
+            <p>Errors: <span id="error-count">0</span></p>
+        </div>
+    </div>
+    
+    <div class="test-content">
+        <h2>Test Content</h2>
+        <div class="test-item">
+            <strong>App Title:</strong> <span data-text="app.title">Whispering Arcana</span>
+        </div>
+        <div class="test-item">
+            <strong>App Subtitle:</strong> <span data-text="app.subtitle">Your Digital Spiritual Sanctuary</span>
+        </div>
+        <div class="test-item">
+            <strong>Daily Card:</strong> <span data-text="nav.dailyCard">Daily Card</span>
+        </div>
+        <div class="test-item">
+            <strong>Formless Reading:</strong> <span data-text="nav.formlessReading">Formless Reading</span>
+        </div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        let errorCount = 0;
+        
+        // Language content
+        const languageContent = {
+            en: {
+                app: {
+                    title: "Whispering Arcana",
+                    subtitle: "Your Digital Spiritual Sanctuary"
+                },
+                nav: {
+                    dailyCard: "Daily Card",
+                    formlessReading: "Formless Reading"
+                }
+            },
+            'zh-TW': {
+                app: {
+                    title: "低語奧秘",
+                    subtitle: "您的數位靈性聖所"
+                },
+                nav: {
+                    dailyCard: "每日一牌",
+                    formlessReading: "自由解讀"
+                }
+            }
+        };
+        
+        let currentLanguage = 'en';
+        
+        function updateDebugInfo(action) {
+            document.getElementById('current-lang').textContent = currentLanguage;
+            document.getElementById('click-count').textContent = clickCount;
+            document.getElementById('last-action').textContent = action;
+            document.getElementById('error-count').textContent = errorCount;
+        }
+        
+        function getText(keyPath) {
+            try {
+                const keys = keyPath.split('.');
+                let current = languageContent[currentLanguage];
+                
+                for (const key of keys) {
+                    if (current && current[key]) {
+                        current = current[key];
+                    } else {
+                        return keyPath;
+                    }
+                }
+                
+                return current || keyPath;
+            } catch (error) {
+                errorCount++;
+                console.error('Error getting text:', error);
+                return keyPath;
+            }
+        }
+        
+        function updateUI() {
+            try {
+                // Update text content
+                const elementsWithText = document.querySelectorAll('[data-text]');
+                elementsWithText.forEach(element => {
+                    const textKey = element.getAttribute('data-text');
+                    if (textKey) {
+                        element.textContent = getText(textKey);
+                    }
+                });
+                
+                // Update language buttons
+                const languageButtons = document.querySelectorAll('.language-btn');
+                languageButtons.forEach(button => {
+                    const buttonLang = button.getAttribute('data-lang');
+                    if (buttonLang === currentLanguage) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+                
+                updateDebugInfo('UI Updated');
+            } catch (error) {
+                errorCount++;
+                console.error('Error updating UI:', error);
+                updateDebugInfo('UI Update Error');
+            }
+        }
+        
+        function setLanguage(language) {
+            try {
+                if (!['en', 'zh-TW'].includes(language)) {
+                    throw new Error('Invalid language: ' + language);
+                }
+                
+                currentLanguage = language;
+                document.documentElement.lang = language === 'zh-TW' ? 'zh-TW' : 'en';
+                updateUI();
+                updateDebugInfo('Language set to ' + language);
+                return true;
+            } catch (error) {
+                errorCount++;
+                console.error('Error setting language:', error);
+                updateDebugInfo('Language Set Error');
+                return false;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Debug page initialized');
+            updateDebugInfo('Page Loaded');
+            
+            // Add event listeners to language buttons
+            const languageButtons = document.querySelectorAll('.language-btn');
+            console.log('Found language buttons:', languageButtons.length);
+            
+            languageButtons.forEach((button, index) => {
+                console.log(`Setting up button ${index}:`, button.getAttribute('data-lang'));
+                
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    clickCount++;
+                    
+                    const selectedLanguage = this.getAttribute('data-lang');
+                    console.log('Button clicked:', selectedLanguage);
+                    updateDebugInfo('Button clicked: ' + selectedLanguage);
+                    
+                    const success = setLanguage(selectedLanguage);
+                    console.log('Language switch result:', success);
+                    
+                    if (success) {
+                        console.log('✅ Language switched successfully to:', selectedLanguage);
+                    } else {
+                        console.error('❌ Failed to switch language to:', selectedLanguage);
+                    }
+                });
+                
+                // Test button click programmatically
+                button.addEventListener('mouseenter', function() {
+                    console.log('Mouse entered button:', this.getAttribute('data-lang'));
+                });
+            });
+            
+            // Initial UI update
+            updateUI();
+            
+            // Test programmatic language switch after 2 seconds
+            setTimeout(() => {
+                console.log('Testing programmatic language switch...');
+                setLanguage('zh-TW');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
