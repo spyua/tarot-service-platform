@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Whispering Arcana - A digital spiritual sanctuary for Tarot card readings">
+    <meta name="keywords" content="tarot, cards, reading, spiritual, mystical, divination">
+    <meta name="author" content="Whispering Arcana">
+    <title>Whispering Arcana - Digital Tarot Sanctuary</title>
+    
+    <!-- Typography imports from Google Fonts CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables - Color Palette */
+        :root {
+            --deep-night-blue: #0B0C2A;
+            --cream-white: #F5F0E6;
+            --matte-gold: #C8A97E;
+            --card-gradient-start: #1A1B3A;
+            --card-gradient-end: #0B0C2A;
+            
+            /* Typography */
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Spacing and Layout */
+            --container-max-width: 1200px;
+            --container-padding: 1rem;
+            --border-radius: 8px;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--deep-night-blue);
+            color: var(--cream-white);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Typography Styles */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        h2 {
+            font-size: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Main Application Container */
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        /* Header Section */
+        .app-header {
+            padding: 2rem var(--container-padding);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .app-title {
+            color: var(--matte-gold);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .app-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* Language Switcher */
+        .language-switcher {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            background: rgba(26, 27, 58, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--matte-gold);
+            border-radius: var(--border-radius);
+            padding: 0.5rem;
+        }
+        
+        .language-btn {
+            background: none;
+            border: none;
+            color: var(--cream-white);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: calc(var(--border-radius) - 2px);
+            transition: var(--transition-smooth);
+        }
+        
+        .language-btn:hover,
+        .language-btn.active {
+            background-color: var(--matte-gold);
+            color: var(--deep-night-blue);
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem var(--container-padding);
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* Feature Navigation */
+        .feature-nav {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .feature-btn {
+            background: linear-gradient(135deg, var(--card-gradient-start), var(--card-gradient-end));
+            border: 2px solid var(--matte-gold);
+            color: var(--cream-white);
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 200px;
+        }
+        
+        .feature-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(200, 169, 126, 0.3);
+            border-color: var(--cream-white);
+        }
+        
+        /* Content Sections */
+        .content-section {
+            display: none;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Daily Card Section */
+        .daily-card-section {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Formless Reading Section */
+        .formless-reading-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Footer */
+        .app-footer {
+            padding: 2rem var(--container-padding);
+            text-align: center;
+            border-top: 1px solid rgba(200, 169, 126, 0.2);
+            margin-top: auto;
+        }
+        
+        .footer-text {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin: 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            :root {
+                --container-padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .app-header {
+                padding: 1.5rem var(--container-padding);
+            }
+            
+            .feature-nav {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .feature-btn {
+                min-width: 250px;
+            }
+            
+            .language-switcher {
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .app-subtitle {
+                font-size: 1rem;
+            }
+            
+            .feature-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                min-width: 200px;
+            }
+        }
+        
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Focus styles for accessibility */
+        button:focus,
+        .feature-btn:focus,
+        .language-btn:focus {
+            outline: 2px solid var(--matte-gold);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Application Container -->
+    <div class="app-container">
+        <!-- Language Switcher -->
+        <div class="language-switcher">
+            <button class="language-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+            <button class="language-btn" data-lang="zh-TW" aria-label="切換到繁體中文">中文</button>
+        </div>
+        
+        <!-- Application Header -->
+        <header class="app-header">
+            <h1 class="app-title" data-text="app.title">Whispering Arcana</h1>
+            <p class="app-subtitle" data-text="app.subtitle">Your Digital Spiritual Sanctuary</p>
+        </header>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Feature Navigation -->
+            <nav class="feature-nav" role="navigation" aria-label="Main features">
+                <button class="feature-btn" data-feature="daily-card" data-text="nav.dailyCard">
+                    Daily Card
+                </button>
+                <button class="feature-btn" data-feature="formless-reading" data-text="nav.formlessReading">
+                    Formless Reading
+                </button>
+            </nav>
+            
+            <!-- Daily Card Section -->
+            <section class="content-section daily-card-section" id="daily-card-section" aria-labelledby="daily-card-title">
+                <h2 id="daily-card-title" data-text="dailyCard.title">Your Daily Card</h2>
+                <p data-text="dailyCard.description">Draw your card for today and discover what the universe has in store for you.</p>
+                <!-- Daily card content will be populated by JavaScript -->
+            </section>
+            
+            <!-- Formless Reading Section -->
+            <section class="content-section formless-reading-section" id="formless-reading-section" aria-labelledby="formless-reading-title">
+                <h2 id="formless-reading-title" data-text="formlessReading.title">Formless Reading</h2>
+                <p data-text="formlessReading.description">Choose between 1-9 cards for a personalized reading experience.</p>
+                <!-- Formless reading content will be populated by JavaScript -->
+            </section>
+        </main>
+        
+        <!-- Application Footer -->
+        <footer class="app-footer">
+            <p class="footer-text" data-text="footer.text">© 2024 Whispering Arcana - A Digital Spiritual Sanctuary</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Basic application initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Whispering Arcana - Application initialized');
+            
+            // Basic feature navigation functionality
+            const featureButtons = document.querySelectorAll('.feature-btn');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            featureButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const feature = this.getAttribute('data-feature');
+                    
+                    // Hide all sections
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show selected section
+                    const targetSection = document.getElementById(feature + '-section');
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                    
+                    // Update button states
+                    featureButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Language switcher basic functionality
+            const languageButtons = document.querySelectorAll('.language-btn');
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    
+                    // Update button states
+                    languageButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update document language
+                    document.documentElement.lang = lang;
+                    
+                    console.log('Language switched to:', lang);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
