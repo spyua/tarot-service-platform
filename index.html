@@ -349,9 +349,463 @@
     </div>
     
     <script>
-        // Basic application initialization
+        // ===== CORE STATE MANAGEMENT SYSTEM =====
+        
+        /**
+         * Centralized Application State Management
+         * Handles localStorage integration, persistence, validation, and error recovery
+         */
+        class AppStateManager {
+            constructor() {
+                this.storageKey = 'whispering-arcana-state';
+                this.defaultState = {
+                    currentLanguage: 'en',
+                    dailyCard: {
+                        date: null,
+                        cardId: null,
+                        revealed: false
+                    },
+                    currentReading: {
+                        cards: [],
+                        revealed: []
+                    },
+                    preferences: {
+                        reducedMotion: false
+                    },
+                    version: '1.0.0' // For future migration support
+                };
+                
+                this.state = this.loadState();
+                this.listeners = new Map();
+                this.isLocalStorageAvailable = this.checkLocalStorageAvailability();
+                
+                // Bind methods to preserve context
+                this.setState = this.setState.bind(this);
+                this.getState = this.getState.bind(this);
+                this.subscribe = this.subscribe.bind(this);
+                this.unsubscribe = this.unsubscribe.bind(this);
+            }
+            
+            /**
+             * Check if localStorage is available and functional
+             * @returns {boolean} True if localStorage is available
+             */
+            checkLocalStorageAvailability() {
+                try {
+                    const testKey = '__localStorage_test__';
+                    localStorage.setItem(testKey, 'test');
+                    localStorage.removeItem(testKey);
+                    return true;
+                } catch (error) {
+                    console.warn('localStorage is not available:', error.message);
+                    return false;
+                }
+            }
+            
+            /**
+             * Validate state structure and data integrity
+             * @param {Object} state - State object to validate
+             * @returns {boolean} True if state is valid
+             */
+            validateState(state) {
+                try {
+                    // Check if state is an object
+                    if (!state || typeof state !== 'object') {
+                        return false;
+                    }
+                    
+                    // Validate required properties exist
+                    const requiredProps = ['currentLanguage', 'dailyCard', 'currentReading', 'preferences'];
+                    for (const prop of requiredProps) {
+                        if (!(prop in state)) {
+                            return false;
+                        }
+                    }
+                    
+                    // Validate language
+                    if (!['en', 'zh-TW'].includes(state.currentLanguage)) {
+                        return false;
+                    }
+                    
+                    // Validate dailyCard structure
+                    const dailyCard = state.dailyCard;
+                    if (!dailyCard || typeof dailyCard !== 'object') {
+                        return false;
+                    }
+                    
+                    // Validate dailyCard date format if present
+                    if (dailyCard.date && !this.isValidDateString(dailyCard.date)) {
+                        return false;
+                    }
+                    
+                    // Validate cardId if present
+                    if (dailyCard.cardId !== null && (!Number.isInteger(dailyCard.cardId) || dailyCard.cardId < 0 || dailyCard.cardId > 77)) {
+                        return false;
+                    }
+                    
+                    // Validate revealed flag
+                    if (typeof dailyCard.revealed !== 'boolean') {
+                        return false;
+                    }
+                    
+                    // Validate currentReading structure
+                    const currentReading = state.currentReading;
+                    if (!currentReading || typeof currentReading !== 'object') {
+                        return false;
+                    }
+                    
+                    if (!Array.isArray(currentReading.cards) || !Array.isArray(currentReading.revealed)) {
+                        return false;
+                    }
+                    
+                    // Validate preferences structure
+                    const preferences = state.preferences;
+                    if (!preferences || typeof preferences !== 'object') {
+                        return false;
+                    }
+                    
+                    if (typeof preferences.reducedMotion !== 'boolean') {
+                        return false;
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('State validation error:', error);
+                    return false;
+                }
+            }
+            
+            /**
+             * Validate date string format (ISO 8601 date)
+             * @param {string} dateString - Date string to validate
+             * @returns {boolean} True if valid date string
+             */
+            isValidDateString(dateString) {
+                if (typeof dateString !== 'string') return false;
+                const date = new Date(dateString);
+                return date instanceof Date && !isNaN(date) && dateString === date.toISOString().split('T')[0];
+            }
+            
+            /**
+             * Load state from localStorage with validation and error recovery
+             * @returns {Object} Valid state object
+             */
+            loadState() {
+                try {
+                    if (!this.isLocalStorageAvailable) {
+                        console.info('Using in-memory state (localStorage unavailable)');
+                        return { ...this.defaultState };
+                    }
+                    
+                    const storedState = localStorage.getItem(this.storageKey);
+                    
+                    if (!storedState) {
+                        console.info('No stored state found, using default state');
+                        return { ...this.defaultState };
+                    }
+                    
+                    const parsedState = JSON.parse(storedState);
+                    
+                    if (!this.validateState(parsedState)) {
+                        console.warn('Stored state is invalid, recovering with default state');
+                        this.clearCorruptedState();
+                        return { ...this.defaultState };
+                    }
+                    
+                    // Merge with default state to handle version upgrades
+                    const mergedState = this.mergeWithDefaults(parsedState);
+                    console.info('State loaded successfully from localStorage');
+                    return mergedState;
+                    
+                } catch (error) {
+                    console.error('Error loading state from localStorage:', error);
+                    this.clearCorruptedState();
+                    return { ...this.defaultState };
+                }
+            }
+            
+            /**
+             * Merge loaded state with default state to handle missing properties
+             * @param {Object} loadedState - State loaded from storage
+             * @returns {Object} Merged state object
+             */
+            mergeWithDefaults(loadedState) {
+                const merged = { ...this.defaultState };
+                
+                // Safely merge each top-level property
+                Object.keys(this.defaultState).forEach(key => {
+                    if (key in loadedState) {
+                        if (typeof this.defaultState[key] === 'object' && this.defaultState[key] !== null) {
+                            merged[key] = { ...this.defaultState[key], ...loadedState[key] };
+                        } else {
+                            merged[key] = loadedState[key];
+                        }
+                    }
+                });
+                
+                return merged;
+            }
+            
+            /**
+             * Clear corrupted state from localStorage
+             */
+            clearCorruptedState() {
+                try {
+                    if (this.isLocalStorageAvailable) {
+                        localStorage.removeItem(this.storageKey);
+                        console.info('Corrupted state cleared from localStorage');
+                    }
+                } catch (error) {
+                    console.error('Error clearing corrupted state:', error);
+                }
+            }
+            
+            /**
+             * Save state to localStorage with error handling
+             * @param {Object} state - State to save
+             * @returns {boolean} True if save was successful
+             */
+            saveState(state) {
+                try {
+                    if (!this.isLocalStorageAvailable) {
+                        console.info('State not persisted (localStorage unavailable)');
+                        return false;
+                    }
+                    
+                    if (!this.validateState(state)) {
+                        console.error('Cannot save invalid state');
+                        return false;
+                    }
+                    
+                    const stateString = JSON.stringify(state);
+                    localStorage.setItem(this.storageKey, stateString);
+                    console.debug('State saved to localStorage');
+                    return true;
+                    
+                } catch (error) {
+                    console.error('Error saving state to localStorage:', error);
+                    
+                    // Handle quota exceeded error
+                    if (error.name === 'QuotaExceededError') {
+                        console.warn('localStorage quota exceeded, attempting cleanup');
+                        this.handleStorageQuotaExceeded();
+                    }
+                    
+                    return false;
+                }
+            }
+            
+            /**
+             * Handle localStorage quota exceeded by clearing old data
+             */
+            handleStorageQuotaExceeded() {
+                try {
+                    // Clear our own data and try again
+                    localStorage.removeItem(this.storageKey);
+                    console.info('Cleared application data due to storage quota');
+                } catch (error) {
+                    console.error('Failed to handle storage quota exceeded:', error);
+                }
+            }
+            
+            /**
+             * Get current state (immutable copy)
+             * @returns {Object} Current state object
+             */
+            getState() {
+                return JSON.parse(JSON.stringify(this.state));
+            }
+            
+            /**
+             * Update state with new values
+             * @param {Object|Function} updates - Object with updates or function that receives current state
+             * @returns {boolean} True if state was updated successfully
+             */
+            setState(updates) {
+                try {
+                    let newState;
+                    
+                    if (typeof updates === 'function') {
+                        newState = updates(this.getState());
+                    } else if (typeof updates === 'object' && updates !== null) {
+                        newState = { ...this.state, ...updates };
+                    } else {
+                        console.error('setState expects an object or function');
+                        return false;
+                    }
+                    
+                    if (!this.validateState(newState)) {
+                        console.error('setState rejected: new state is invalid');
+                        return false;
+                    }
+                    
+                    const oldState = this.getState();
+                    this.state = newState;
+                    
+                    // Save to localStorage
+                    this.saveState(newState);
+                    
+                    // Notify listeners
+                    this.notifyListeners(newState, oldState);
+                    
+                    return true;
+                    
+                } catch (error) {
+                    console.error('Error in setState:', error);
+                    return false;
+                }
+            }
+            
+            /**
+             * Subscribe to state changes
+             * @param {string} key - Unique key for the listener
+             * @param {Function} callback - Function to call when state changes
+             */
+            subscribe(key, callback) {
+                if (typeof callback !== 'function') {
+                    console.error('subscribe callback must be a function');
+                    return;
+                }
+                
+                this.listeners.set(key, callback);
+                console.debug(`Subscribed listener: ${key}`);
+            }
+            
+            /**
+             * Unsubscribe from state changes
+             * @param {string} key - Key of the listener to remove
+             */
+            unsubscribe(key) {
+                const removed = this.listeners.delete(key);
+                if (removed) {
+                    console.debug(`Unsubscribed listener: ${key}`);
+                }
+            }
+            
+            /**
+             * Notify all listeners of state changes
+             * @param {Object} newState - New state
+             * @param {Object} oldState - Previous state
+             */
+            notifyListeners(newState, oldState) {
+                this.listeners.forEach((callback, key) => {
+                    try {
+                        callback(newState, oldState);
+                    } catch (error) {
+                        console.error(`Error in listener ${key}:`, error);
+                    }
+                });
+            }
+            
+            /**
+             * Reset state to default values
+             * @returns {boolean} True if reset was successful
+             */
+            resetState() {
+                console.info('Resetting state to defaults');
+                return this.setState({ ...this.defaultState });
+            }
+            
+            /**
+             * Get specific state property with dot notation support
+             * @param {string} path - Property path (e.g., 'dailyCard.date')
+             * @returns {*} Property value or undefined
+             */
+            getStateProperty(path) {
+                try {
+                    return path.split('.').reduce((obj, key) => obj?.[key], this.state);
+                } catch (error) {
+                    console.error('Error getting state property:', error);
+                    return undefined;
+                }
+            }
+            
+            /**
+             * Set specific state property with dot notation support
+             * @param {string} path - Property path (e.g., 'dailyCard.date')
+             * @param {*} value - Value to set
+             * @returns {boolean} True if property was set successfully
+             */
+            setStateProperty(path, value) {
+                try {
+                    // Deep clone the state to avoid mutations
+                    const newState = JSON.parse(JSON.stringify(this.state));
+                    const keys = path.split('.');
+                    const lastKey = keys.pop();
+                    
+                    let current = newState;
+                    for (const key of keys) {
+                        if (!(key in current)) {
+                            current[key] = {};
+                        }
+                        current = current[key];
+                    }
+                    
+                    current[lastKey] = value;
+                    
+                    return this.setState(newState);
+                } catch (error) {
+                    console.error('Error setting state property:', error);
+                    return false;
+                }
+            }
+            
+            /**
+             * Check if daily card data is for today
+             * @returns {boolean} True if daily card is for today
+             */
+            isDailyCardForToday() {
+                const today = new Date().toISOString().split('T')[0];
+                return this.state.dailyCard.date === today;
+            }
+            
+            /**
+             * Clear daily card data (for new day)
+             */
+            clearDailyCard() {
+                return this.setState(state => ({
+                    ...state,
+                    dailyCard: {
+                        date: null,
+                        cardId: null,
+                        revealed: false
+                    }
+                }));
+            }
+            
+            /**
+             * Get debug information about the state manager
+             * @returns {Object} Debug information
+             */
+            getDebugInfo() {
+                return {
+                    isLocalStorageAvailable: this.isLocalStorageAvailable,
+                    stateValid: this.validateState(this.state),
+                    listenerCount: this.listeners.size,
+                    stateSize: JSON.stringify(this.state).length,
+                    storageKey: this.storageKey
+                };
+            }
+        }
+        
+        // Create global state manager instance
+        window.AppState = new AppStateManager();
+        
+        // ===== APPLICATION INITIALIZATION =====
+        
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Whispering Arcana - Application initialized');
+            console.log('State Manager Debug Info:', AppState.getDebugInfo());
+            
+            // Initialize language from state
+            const currentLanguage = AppState.getState().currentLanguage;
+            document.documentElement.lang = currentLanguage;
+            
+            // Update language button states
+            const languageButtons = document.querySelectorAll('.language-btn');
+            languageButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLanguage);
+            });
             
             // Basic feature navigation functionality
             const featureButtons = document.querySelectorAll('.feature-btn');
@@ -378,11 +832,13 @@
                 });
             });
             
-            // Language switcher basic functionality
-            const languageButtons = document.querySelectorAll('.language-btn');
+            // Enhanced language switcher with state management
             languageButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const lang = this.getAttribute('data-lang');
+                    
+                    // Update state
+                    AppState.setState({ currentLanguage: lang });
                     
                     // Update button states
                     languageButtons.forEach(btn => btn.classList.remove('active'));
@@ -394,6 +850,17 @@
                     console.log('Language switched to:', lang);
                 });
             });
+            
+            // Subscribe to state changes for debugging
+            AppState.subscribe('debug', (newState, oldState) => {
+                console.debug('State changed:', { newState, oldState });
+            });
+            
+            // Check for reduced motion preference
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                AppState.setStateProperty('preferences.reducedMotion', true);
+                console.info('Reduced motion preference detected and saved');
+            }
         });
     </script>
 </body>
