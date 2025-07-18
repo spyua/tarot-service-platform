@@ -3,3 +3,4 @@
 
 export { TarotDeck, tarotDeck } from './TarotDeck';
 export { StorageService, storageService } from './StorageService';
+export { DailyCardService, dailyCardService } from './DailyCardService';
