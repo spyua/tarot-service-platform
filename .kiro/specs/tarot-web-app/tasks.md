@@ -18,7 +18,7 @@
 
 ## 核心資料結構和型別定義
 
-- [ ] 3. 建立 TypeScript 型別定義
+- [x] 3. 建立 TypeScript 型別定義
   - 定義 TarotCard 介面和相關型別
   - 定義 ReadingResult, DrawnCard, DailyCardRecord 型別
   - 定義 UserPreferences 和 LocalStorageData 型別
