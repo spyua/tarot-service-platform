@@ -67,7 +67,16 @@
 
 ## 基礎 UI 組件開發
 
-- [ ] 8. 建立設計系統和通用組件
+- [x] 8. 建立設計系統和通用組件
+
+
+
+
+
+
+
+
+
   - 設定 Tailwind CSS 自定義主題（紫色系主色調、金色輔助色）
   - 建立字體系統（Noto Serif TC 和 Inter）
   - 實作 Button, Card, Modal, Loading 等基礎組件

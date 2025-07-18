@@ -3,6 +3,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import './utilities.css';
 
 @layer base {
   html {
@@ -11,6 +12,14 @@
   
   body {
     @apply bg-gray-50 text-gray-900 antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-primary;
+  }
+  
+  p, span, div, button, input, textarea, select {
+    @apply font-secondary;
   }
 }
 

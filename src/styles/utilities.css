@@ -1,0 +1,126 @@
+/* 
+ * Design System Utilities
+ * Additional utility classes for the tarot web app design system
+ */
+
+/* Text gradient utilities */
+.text-gradient {
+  @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+}
+
+.text-gradient-purple {
+  @apply bg-gradient-to-r from-primary-500 to-primary-800 bg-clip-text text-transparent;
+}
+
+.text-gradient-gold {
+  @apply bg-gradient-to-r from-accent-400 to-accent-700 bg-clip-text text-transparent;
+}
+
+/* Card utilities */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+.card-glass {
+  @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg;
+}
+
+/* Button utilities */
+.btn-primary {
+  @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md;
+}
+
+.btn-accent {
+  @apply bg-accent-500 hover:bg-accent-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md;
+}
+
+.btn-outline {
+  @apply border-2 border-primary-600 text-primary-600 hover:bg-primary-50 py-2 px-4 rounded-lg transition-colors duration-200;
+}
+
+.btn-ghost {
+  @apply text-primary-600 hover:bg-primary-50 py-2 px-4 rounded-lg transition-colors duration-200;
+}
+
+/* Typography utilities */
+.heading-1 {
+  @apply text-4xl font-bold font-primary text-gray-900;
+}
+
+.heading-2 {
+  @apply text-3xl font-semibold font-primary text-gray-900;
+}
+
+.heading-3 {
+  @apply text-2xl font-semibold font-primary text-gray-900;
+}
+
+.heading-4 {
+  @apply text-xl font-medium font-primary text-gray-900;
+}
+
+.body-large {
+  @apply text-lg font-secondary text-gray-700;
+}
+
+.body {
+  @apply text-base font-secondary text-gray-700;
+}
+
+.body-small {
+  @apply text-sm font-secondary text-gray-600;
+}
+
+.caption {
+  @apply text-xs font-secondary text-gray-500;
+}
+
+/* Layout utilities */
+.section {
+  @apply py-8 md:py-12;
+}
+
+.section-lg {
+  @apply py-12 md:py-16;
+}
+
+/* Spacing utilities */
+.stack-sm > * + * {
+  @apply mt-2;
+}
+
+.stack > * + * {
+  @apply mt-4;
+}
+
+.stack-lg > * + * {
+  @apply mt-8;
+}
+
+/* Focus utilities */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
