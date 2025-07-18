@@ -1,2 +1,3 @@
 // Common reusable components
-// Export components as they are created
+export { default as LoadingSpinner } from './LoadingSpinner';
+export { default as AnimatedContainer } from './AnimatedContainer';

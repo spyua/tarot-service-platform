@@ -1,2 +1,3 @@
 // Layout components (Header, Footer, Navigation, etc.)
-// Export components as they are created
+export { default as Layout } from './Layout';
+export { default as Navigation } from './Navigation';

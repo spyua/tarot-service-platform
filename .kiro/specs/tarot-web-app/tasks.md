@@ -3,18 +3,13 @@
 ## 專案初始化和基礎設定
 
 - [x] 1. 建立專案基礎架構
-
-
-
-
-
   - 使用 Vite + React + TypeScript 初始化專案
   - 配置 Tailwind CSS 和必要的開發工具
   - 建立專案目錄結構（components, pages, hooks, services, utils, data, types, styles, assets）
   - 配置 ESLint, Prettier 和基本的開發環境
   - _需求: 需求 4, 需求 8_
 
-- [ ] 2. 設定核心依賴和工具
+- [x] 2. 設定核心依賴和工具
   - 安裝並配置 React Router v6
   - 安裝並配置 Framer Motion 動畫庫
   - 設定 TypeScript 嚴格模式和型別配置
