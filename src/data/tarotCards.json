@@ -1,0 +1,689 @@
+{
+  "info": {
+    "totalCards": 78,
+    "majorArcana": 22,
+    "minorArcana": 56,
+    "languages": ["zh-TW", "en"],
+    "version": "1.0.0"
+  },
+  "majorArcana": [
+    {
+      "id": "major_00",
+      "name": "愚者",
+      "nameEn": "The Fool",
+      "number": 0,
+      "suit": "major",
+      "image": "/images/cards/major_00.jpg",
+      "meanings": {
+        "upright": {
+          "keywords": ["新開始", "冒險", "純真", "自由", "潛力"],
+          "keywordsEn": [
+            "New beginnings",
+            "Adventure",
+            "Innocence",
+            "Freedom",
+            "Potential"
+          ],
+          "description": "愚者代表新的開始和無限的可能性。他象徵著純真、自發性和對未知的勇敢探索。",
+          "descriptionEn": "The Fool represents new beginnings and unlimited potential. He symbolizes innocence, spontaneity, and brave exploration of the unknown.",
+          "love": "在愛情中，愚者暗示著新戀情的開始或現有關係的新階段。",
+          "loveEn": "In love, The Fool suggests the beginning of a new romance or a new phase in an existing relationship.",
+          "career": "在事業上，愚者鼓勵你勇敢嘗試新的機會，不要害怕改變或創新。",
+          "careerEn": "In career, The Fool encourages you to bravely try new opportunities, don't fear change or innovation.",
+          "health": "身體健康方面，愚者提醒你保持樂觀的心態，嘗試新的健康習慣。",
+          "healthEn": "Regarding physical health, The Fool reminds you to maintain an optimistic attitude and try new healthy habits.",
+          "spiritual": "靈性層面，愚者象徵著心靈的純淨和對真理的渴望。",
+          "spiritualEn": "Spiritually, The Fool symbolizes purity of heart and desire for truth."
+        },
+        "reversed": {
+          "keywords": ["魯莽", "缺乏計劃", "愚蠢", "風險", "不成熟"],
+          "keywordsEn": [
+            "Recklessness",
+            "Lack of planning",
+            "Foolishness",
+            "Risk",
+            "Immaturity"
+          ],
+          "description": "逆位的愚者警告不要過於衝動或缺乏考慮。需要更多的計劃和謹慎。",
+          "descriptionEn": "Reversed Fool warns against being too impulsive or lacking consideration. More planning and caution are needed.",
+          "love": "在感情中可能表示不成熟的態度或對關係缺乏承諾。",
+          "loveEn": "In relationships, it may indicate immature attitudes or lack of commitment to the relationship.",
+          "career": "事業上可能因為缺乏規劃而遇到困難，需要更加謹慎。",
+          "careerEn": "In career, you may encounter difficulties due to lack of planning, requiring more caution.",
+          "health": "健康方面需要更加謹慎，避免不必要的風險。",
+          "healthEn": "Regarding health, more caution is needed, avoiding unnecessary risks.",
+          "spiritual": "靈性成長需要更多的耐心和智慧，避免盲目追求。",
+          "spiritualEn": "Spiritual growth requires more patience and wisdom, avoiding blind pursuit."
+        }
+      }
+    },
+    {
+      "id": "major_01",
+      "name": "魔術師",
+      "nameEn": "The Magician",
+      "number": 1,
+      "suit": "major",
+      "image": "/images/cards/major_01.jpg",
+      "meanings": {
+        "upright": {
+          "keywords": ["意志力", "創造力", "技能", "專注", "顯化"],
+          "keywordsEn": [
+            "Willpower",
+            "Creativity",
+            "Skill",
+            "Focus",
+            "Manifestation"
+          ],
+          "description": "魔術師代表意志力和創造能力。他擁有將想法轉化為現實的力量。",
+          "descriptionEn": "The Magician represents willpower and creative ability. He has the power to transform ideas into reality.",
+          "love": "在愛情中，魔術師表示你有能力創造理想的關係。",
+          "loveEn": "In love, The Magician indicates you have the ability to create ideal relationships.",
+          "career": "事業上，魔術師暗示你擁有實現目標的技能和資源。",
+          "careerEn": "In career, The Magician suggests you possess the skills and resources to achieve your goals.",
+          "health": "健康方面，魔術師鼓勵你積極管理自己的身心狀態。",
+          "healthEn": "Regarding health, The Magician encourages you to actively manage your physical and mental state.",
+          "spiritual": "靈性上，魔術師代表個人力量的覺醒和精神能量的運用。",
+          "spiritualEn": "Spiritually, The Magician represents awakening of personal power and use of spiritual energy."
+        },
+        "reversed": {
+          "keywords": ["濫用權力", "缺乏專注", "欺騙", "操控", "能力不足"],
+          "keywordsEn": [
+            "Abuse of power",
+            "Lack of focus",
+            "Deception",
+            "Manipulation",
+            "Insufficient ability"
+          ],
+          "description": "逆位的魔術師可能表示濫用權力或缺乏專注力。",
+          "descriptionEn": "Reversed Magician may indicate abuse of power or lack of focus.",
+          "love": "感情中可能存在操控或欺騙的行為。",
+          "loveEn": "In relationships, there may be manipulative or deceptive behavior.",
+          "career": "工作上可能缺乏必要的技能或資源。",
+          "careerEn": "At work, you may lack necessary skills or resources.",
+          "health": "健康方面可能因為不良習慣而出現問題。",
+          "healthEn": "Health issues may arise due to poor habits.",
+          "spiritual": "靈性發展可能受到自我欺騙或虛假信念的阻礙。",
+          "spiritualEn": "Spiritual development may be hindered by self-deception or false beliefs."
+        }
+      }
+    },
+    {
+      "id": "major_21",
+      "name": "世界",
+      "nameEn": "The World",
+      "number": 21,
+      "suit": "major",
+      "image": "/images/cards/major_21.jpg",
+      "meanings": {
+        "upright": {
+          "keywords": ["完成", "成就", "圓滿", "整合", "成功"],
+          "keywordsEn": [
+            "Completion",
+            "Achievement",
+            "Fulfillment",
+            "Integration",
+            "Success"
+          ],
+          "description": "世界牌代表完成和成就。它象徵著目標的達成和人生階段的圓滿結束。",
+          "descriptionEn": "The World represents completion and achievement. It symbolizes goal attainment and fulfilling end of life phases.",
+          "love": "在愛情中，世界表示關係的圓滿和長久的幸福。",
+          "loveEn": "In love, The World indicates relationship fulfillment and lasting happiness.",
+          "career": "事業上，世界暗示重大目標的實現和事業的成功。",
+          "careerEn": "In career, The World suggests realization of major goals and career success.",
+          "health": "健康方面，世界代表身心的完全康復和整體健康。",
+          "healthEn": "Regarding health, The World represents complete recovery and overall wellness.",
+          "spiritual": "靈性上，世界象徵著精神旅程的完成和宇宙意識的達成。",
+          "spiritualEn": "Spiritually, The World symbolizes completion of spiritual journey and attainment of cosmic consciousness."
+        },
+        "reversed": {
+          "keywords": ["未完成", "延遲", "缺乏成就感", "停滯", "不滿足"],
+          "keywordsEn": [
+            "Incomplete",
+            "Delays",
+            "Lack of fulfillment",
+            "Stagnation",
+            "Dissatisfaction"
+          ],
+          "description": "逆位的世界可能表示目標尚未達成或缺乏滿足感。",
+          "descriptionEn": "Reversed World may indicate goals not yet achieved or lack of satisfaction.",
+          "love": "感情中可能感到不完整或對關係不滿足。",
+          "loveEn": "In relationships, you may feel incomplete or dissatisfied with the relationship.",
+          "career": "工作上可能距離目標還有一段距離或成就感不足。",
+          "careerEn": "At work, you may still be some distance from goals or lack sense of achievement.",
+          "health": "健康方面可能康復過程尚未完成。",
+          "healthEn": "Regarding health, the recovery process may not yet be complete.",
+          "spiritual": "靈性發展可能還需要更多的時間和努力。",
+          "spiritualEn": "Spiritual development may require more time and effort."
+        }
+      }
+    }
+  ],
+  "minorArcana": {
+    "cups": [
+      {
+        "id": "cups_01",
+        "name": "聖杯一",
+        "nameEn": "Ace of Cups",
+        "number": 1,
+        "suit": "cups",
+        "image": "/images/cards/cups_01.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["新愛情", "情感開始", "直覺", "精神覺醒", "創造力"],
+            "keywordsEn": [
+              "New love",
+              "Emotional beginning",
+              "Intuition",
+              "Spiritual awakening",
+              "Creativity"
+            ],
+            "description": "聖杯一代表情感的新開始和愛的純粹能量。它象徵著心靈的開放和直覺的覺醒。",
+            "descriptionEn": "Ace of Cups represents new emotional beginnings and pure energy of love. It symbolizes opening of the heart and awakening of intuition.",
+            "love": "在愛情中，聖杯一表示新戀情的開始或現有關係的深化。",
+            "loveEn": "In love, Ace of Cups indicates beginning of new romance or deepening of existing relationships.",
+            "career": "事業上，聖杯一暗示創意工作或人際關係的改善。",
+            "careerEn": "In career, Ace of Cups suggests creative work or improvement in interpersonal relationships.",
+            "health": "健康方面，聖杯一代表情緒健康的改善和治療的開始。",
+            "healthEn": "Regarding health, Ace of Cups represents improvement in emotional health and beginning of healing.",
+            "spiritual": "靈性上，聖杯一象徵著精神覺醒和與高我的連接。",
+            "spiritualEn": "Spiritually, Ace of Cups symbolizes spiritual awakening and connection with higher self."
+          },
+          "reversed": {
+            "keywords": [
+              "情感封閉",
+              "愛情受阻",
+              "創意枯竭",
+              "精神空虛",
+              "失望"
+            ],
+            "keywordsEn": [
+              "Emotional closure",
+              "Blocked love",
+              "Creative drought",
+              "Spiritual emptiness",
+              "Disappointment"
+            ],
+            "description": "逆位的聖杯一可能表示情感的封閉或愛情的受阻。",
+            "descriptionEn": "Reversed Ace of Cups may indicate emotional closure or blocked love.",
+            "love": "感情中可能遇到障礙或情感表達困難。",
+            "loveEn": "In relationships, you may encounter obstacles or difficulty expressing emotions.",
+            "career": "工作上可能缺乏創意靈感或人際關係緊張。",
+            "careerEn": "At work, you may lack creative inspiration or have tense interpersonal relationships.",
+            "health": "健康方面可能情緒低落或精神狀態不佳。",
+            "healthEn": "Regarding health, you may feel emotionally down or have poor mental state.",
+            "spiritual": "靈性發展可能受到情感阻礙的影響。",
+            "spiritualEn": "Spiritual development may be affected by emotional obstacles."
+          }
+        }
+      },
+      {
+        "id": "cups_02",
+        "name": "聖杯二",
+        "nameEn": "Two of Cups",
+        "number": 2,
+        "suit": "cups",
+        "image": "/images/cards/cups_02.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["伙伴關係", "愛情", "和諧", "合作", "相互吸引"],
+            "keywordsEn": [
+              "Partnership",
+              "Love",
+              "Harmony",
+              "Cooperation",
+              "Mutual attraction"
+            ],
+            "description": "聖杯二代表和諧的伙伴關係和相互的愛情。它象徵著兩個人之間的深度連接。",
+            "descriptionEn": "Two of Cups represents harmonious partnership and mutual love. It symbolizes deep connection between two people.",
+            "love": "在愛情中，聖杯二表示理想的伴侶關係和深度的情感連接。",
+            "loveEn": "In love, Two of Cups indicates ideal partnership and deep emotional connection.",
+            "career": "事業上，聖杯二暗示成功的合作關係和團隊和諧。",
+            "careerEn": "In career, Two of Cups suggests successful cooperation and team harmony.",
+            "health": "健康方面，聖杯二代表身心的平衡和支持系統的重要性。",
+            "healthEn": "Regarding health, Two of Cups represents mind-body balance and importance of support systems.",
+            "spiritual": "靈性上，聖杯二象徵著靈魂伴侶的相遇和精神的共鳴。",
+            "spiritualEn": "Spiritually, Two of Cups symbolizes meeting of soul mates and spiritual resonance."
+          },
+          "reversed": {
+            "keywords": ["關係不和", "分離", "溝通問題", "不平衡", "誤解"],
+            "keywordsEn": [
+              "Relationship discord",
+              "Separation",
+              "Communication issues",
+              "Imbalance",
+              "Misunderstanding"
+            ],
+            "description": "逆位的聖杯二可能表示關係中的不和諧或溝通問題。",
+            "descriptionEn": "Reversed Two of Cups may indicate disharmony in relationships or communication issues.",
+            "love": "感情中可能出現誤解或關係的不平衡。",
+            "loveEn": "In relationships, there may be misunderstandings or relationship imbalance.",
+            "career": "工作上可能面臨合作困難或團隊衝突。",
+            "careerEn": "At work, you may face cooperation difficulties or team conflicts.",
+            "health": "健康方面可能因為人際壓力而影響身心狀態。",
+            "healthEn": "Regarding health, physical and mental state may be affected by interpersonal stress.",
+            "spiritual": "靈性發展可能受到關係問題的干擾。",
+            "spiritualEn": "Spiritual development may be disturbed by relationship issues."
+          }
+        }
+      },
+      {
+        "id": "cups_10",
+        "name": "聖杯十",
+        "nameEn": "Ten of Cups",
+        "number": 10,
+        "suit": "cups",
+        "image": "/images/cards/cups_10.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["家庭幸福", "情感滿足", "和諧", "完美", "祝福"],
+            "keywordsEn": [
+              "Family happiness",
+              "Emotional fulfillment",
+              "Harmony",
+              "Perfection",
+              "Blessings"
+            ],
+            "description": "聖杯十代表情感的完全滿足和家庭的幸福。它象徵著愛情和關係的圓滿。",
+            "descriptionEn": "Ten of Cups represents complete emotional fulfillment and family happiness. It symbolizes perfection in love and relationships.",
+            "love": "在愛情中，聖杯十表示關係的圓滿和長久的幸福。",
+            "loveEn": "In love, Ten of Cups indicates relationship fulfillment and lasting happiness.",
+            "career": "事業上，聖杯十暗示工作與生活的完美平衡。",
+            "careerEn": "In career, Ten of Cups suggests perfect work-life balance.",
+            "health": "健康方面，聖杯十代表身心的完全健康和家庭支持。",
+            "healthEn": "Regarding health, Ten of Cups represents complete physical and mental health with family support.",
+            "spiritual": "靈性上，聖杯十象徵著精神的圓滿和宇宙的祝福。",
+            "spiritualEn": "Spiritually, Ten of Cups symbolizes spiritual fulfillment and cosmic blessings."
+          },
+          "reversed": {
+            "keywords": [
+              "家庭不和",
+              "關係問題",
+              "不現實期望",
+              "表面和諧",
+              "失望"
+            ],
+            "keywordsEn": [
+              "Family discord",
+              "Relationship problems",
+              "Unrealistic expectations",
+              "Surface harmony",
+              "Disappointment"
+            ],
+            "description": "逆位的聖杯十可能表示家庭問題或對完美的不現實期望。",
+            "descriptionEn": "Reversed Ten of Cups may indicate family problems or unrealistic expectations of perfection.",
+            "love": "感情中可能面臨理想與現實的落差。",
+            "loveEn": "In relationships, you may face gaps between ideals and reality.",
+            "career": "工作上可能難以平衡事業與家庭。",
+            "careerEn": "At work, you may struggle to balance career and family.",
+            "health": "健康方面可能因為家庭壓力而受到影響。",
+            "healthEn": "Regarding health, you may be affected by family stress.",
+            "spiritual": "靈性發展可能受到對完美的執著阻礙。",
+            "spiritualEn": "Spiritual development may be hindered by attachment to perfection."
+          }
+        }
+      },
+      {
+        "id": "cups_king",
+        "name": "聖杯國王",
+        "nameEn": "King of Cups",
+        "number": 14,
+        "suit": "cups",
+        "image": "/images/cards/cups_king.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["情感掌控", "慈悲", "外交手腕", "平衡", "智慧領導"],
+            "keywordsEn": [
+              "Emotional mastery",
+              "Compassion",
+              "Diplomacy",
+              "Balance",
+              "Wise leadership"
+            ],
+            "description": "聖杯國王代表情感的掌控和慈悲的領導。他象徵著智慧與情感的完美平衡。",
+            "descriptionEn": "King of Cups represents emotional mastery and compassionate leadership. He symbolizes perfect balance of wisdom and emotion.",
+            "love": "在愛情中，聖杯國王表示成熟穩定的關係和情感的智慧。",
+            "loveEn": "In love, King of Cups indicates mature stable relationships and emotional wisdom.",
+            "career": "事業上，聖杯國王暗示領導職位和人際關係的專長。",
+            "careerEn": "In career, King of Cups suggests leadership positions and expertise in interpersonal relationships.",
+            "health": "健康方面，聖杯國王代表身心平衡和情緒健康的重要性。",
+            "healthEn": "Regarding health, King of Cups represents mind-body balance and importance of emotional health.",
+            "spiritual": "靈性上，聖杯國王象徵著精神導師的角色和慈悲的智慧。",
+            "spiritualEn": "Spiritually, King of Cups symbolizes the role of spiritual mentor and compassionate wisdom."
+          },
+          "reversed": {
+            "keywords": ["情緒失控", "操控", "冷酷", "壓抑", "不平衡"],
+            "keywordsEn": [
+              "Emotional loss of control",
+              "Manipulation",
+              "Coldness",
+              "Repression",
+              "Imbalance"
+            ],
+            "description": "逆位的聖杯國王可能表示情感的失控或過度的壓抑。",
+            "descriptionEn": "Reversed King of Cups may indicate emotional loss of control or excessive repression.",
+            "love": "感情中可能出現控制慾或情感的冷漠。",
+            "loveEn": "In relationships, there may be controlling behavior or emotional coldness.",
+            "career": "工作上可能濫用職權或缺乏同理心。",
+            "careerEn": "At work, you may abuse authority or lack empathy.",
+            "health": "健康方面可能因為情緒壓抑而出現問題。",
+            "healthEn": "Regarding health, problems may arise due to emotional repression.",
+            "spiritual": "靈性發展可能受到情感阻礙的影響。",
+            "spiritualEn": "Spiritual development may be affected by emotional obstacles."
+          }
+        }
+      }
+    ],
+    "wands": [
+      {
+        "id": "wands_01",
+        "name": "權杖一",
+        "nameEn": "Ace of Wands",
+        "number": 1,
+        "suit": "wands",
+        "image": "/images/cards/wands_01.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["新開始", "創造力", "靈感", "潛力", "行動力"],
+            "keywordsEn": [
+              "New beginnings",
+              "Creativity",
+              "Inspiration",
+              "Potential",
+              "Action"
+            ],
+            "description": "權杖一代表創造力的火花和新計劃的開始。它象徵著行動的動力和無限的潛能。",
+            "descriptionEn": "Ace of Wands represents creative spark and beginning of new projects. It symbolizes motivation for action and unlimited potential.",
+            "love": "在愛情中，權杖一表示激情的開始或關係中的新活力。",
+            "loveEn": "In love, Ace of Wands indicates beginning of passion or new vitality in relationships.",
+            "career": "事業上，權杖一暗示新項目的啟動或創業的機會。",
+            "careerEn": "In career, Ace of Wands suggests launching new projects or entrepreneurial opportunities.",
+            "health": "健康方面，權杖一代表活力的恢復和新的健康計劃。",
+            "healthEn": "Regarding health, Ace of Wands represents vitality recovery and new health plans.",
+            "spiritual": "靈性上，權杖一象徵著精神能量的覺醒和創造力的啟發。",
+            "spiritualEn": "Spiritually, Ace of Wands symbolizes awakening of spiritual energy and creative inspiration."
+          },
+          "reversed": {
+            "keywords": ["缺乏動力", "創意受阻", "延遲", "挫折", "能量不足"],
+            "keywordsEn": [
+              "Lack of motivation",
+              "Creative blocks",
+              "Delays",
+              "Frustration",
+              "Low energy"
+            ],
+            "description": "逆位的權杖一可能表示創意的受阻或缺乏行動的動力。",
+            "descriptionEn": "Reversed Ace of Wands may indicate creative blocks or lack of motivation for action.",
+            "love": "感情中可能缺乏激情或新鮮感。",
+            "loveEn": "In relationships, there may be lack of passion or freshness.",
+            "career": "工作上可能面臨創意枯竭或項目延遲。",
+            "careerEn": "At work, you may face creative drought or project delays.",
+            "health": "健康方面可能感到疲倦或缺乏活力。",
+            "healthEn": "Regarding health, you may feel tired or lack vitality.",
+            "spiritual": "靈性發展可能受到能量不足的影響。",
+            "spiritualEn": "Spiritual development may be affected by insufficient energy."
+          }
+        }
+      },
+      {
+        "id": "wands_10",
+        "name": "權杖十",
+        "nameEn": "Ten of Wands",
+        "number": 10,
+        "suit": "wands",
+        "image": "/images/cards/wands_10.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["重擔", "責任", "壓力", "堅持", "接近成功"],
+            "keywordsEn": [
+              "Burden",
+              "Responsibility",
+              "Pressure",
+              "Perseverance",
+              "Near success"
+            ],
+            "description": "權杖十代表承擔重大責任和壓力。雖然負擔沉重，但成功就在眼前。",
+            "descriptionEn": "Ten of Wands represents bearing great responsibility and pressure. Though the burden is heavy, success is within reach.",
+            "love": "在愛情中，權杖十可能表示關係中的責任感或壓力。",
+            "loveEn": "In love, Ten of Wands may indicate sense of responsibility or pressure in relationships.",
+            "career": "事業上，權杖十暗示工作負擔重但即將獲得成果。",
+            "careerEn": "In career, Ten of Wands suggests heavy workload but approaching results.",
+            "health": "健康方面，權杖十代表因壓力而感到疲憊，需要休息。",
+            "healthEn": "Regarding health, Ten of Wands represents fatigue from stress, requiring rest.",
+            "spiritual": "靈性上，權杖十象徵著精神修行的考驗和堅持。",
+            "spiritualEn": "Spiritually, Ten of Wands symbolizes trials and perseverance in spiritual practice."
+          },
+          "reversed": {
+            "keywords": ["放下負擔", "委派", "解脫", "重新分配", "尋求幫助"],
+            "keywordsEn": [
+              "Letting go of burdens",
+              "Delegation",
+              "Relief",
+              "Redistribution",
+              "Seeking help"
+            ],
+            "description": "逆位的權杖十表示學會放下不必要的負擔或尋求他人協助。",
+            "descriptionEn": "Reversed Ten of Wands indicates learning to let go of unnecessary burdens or seeking others' help.",
+            "love": "感情中可能學會分擔責任或減輕關係壓力。",
+            "loveEn": "In relationships, you may learn to share responsibilities or reduce relationship pressure.",
+            "career": "工作上可能學會委派任務或重新安排優先順序。",
+            "careerEn": "At work, you may learn to delegate tasks or rearrange priorities.",
+            "health": "健康方面可能找到減壓的方法或獲得支持。",
+            "healthEn": "Regarding health, you may find ways to reduce stress or gain support.",
+            "spiritual": "靈性發展可能學會放下執著，尋求平衡。",
+            "spiritualEn": "Spiritual development may involve learning to let go of attachments and seek balance."
+          }
+        }
+      }
+    ],
+    "swords": [
+      {
+        "id": "swords_01",
+        "name": "寶劍一",
+        "nameEn": "Ace of Swords",
+        "number": 1,
+        "suit": "swords",
+        "image": "/images/cards/swords_01.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["新想法", "清晰思考", "突破", "真相", "智慧"],
+            "keywordsEn": [
+              "New ideas",
+              "Clear thinking",
+              "Breakthrough",
+              "Truth",
+              "Wisdom"
+            ],
+            "description": "寶劍一代表思想的突破和真相的揭露。它象徵著清晰的思考和新觀點的獲得。",
+            "descriptionEn": "Ace of Swords represents mental breakthrough and revelation of truth. It symbolizes clear thinking and gaining new perspectives.",
+            "love": "在愛情中，寶劍一表示關係中的誠實溝通或新的理解。",
+            "loveEn": "In love, Ace of Swords indicates honest communication or new understanding in relationships.",
+            "career": "事業上，寶劍一暗示新策略的制定或問題的解決。",
+            "careerEn": "In career, Ace of Swords suggests formulating new strategies or solving problems.",
+            "health": "健康方面，寶劍一代表正確診斷或治療方法的發現。",
+            "healthEn": "Regarding health, Ace of Swords represents correct diagnosis or discovery of treatment methods.",
+            "spiritual": "靈性上，寶劍一象徵著精神覺醒和真理的領悟。",
+            "spiritualEn": "Spiritually, Ace of Swords symbolizes spiritual awakening and realization of truth."
+          },
+          "reversed": {
+            "keywords": ["思維混亂", "錯誤判斷", "溝通不良", "偏見", "困惑"],
+            "keywordsEn": [
+              "Mental confusion",
+              "Poor judgment",
+              "Poor communication",
+              "Bias",
+              "Confusion"
+            ],
+            "description": "逆位的寶劍一可能表示思維的混亂或判斷的錯誤。",
+            "descriptionEn": "Reversed Ace of Swords may indicate mental confusion or poor judgment.",
+            "love": "感情中可能出現溝通誤解或思考不清。",
+            "loveEn": "In relationships, there may be communication misunderstandings or unclear thinking.",
+            "career": "工作上可能做出錯誤決策或缺乏清晰方向。",
+            "careerEn": "At work, you may make wrong decisions or lack clear direction.",
+            "health": "健康方面可能因為資訊不正確而延誤治療。",
+            "healthEn": "Regarding health, treatment may be delayed due to incorrect information.",
+            "spiritual": "靈性發展可能受到思想混亂的阻礙。",
+            "spiritualEn": "Spiritual development may be hindered by mental confusion."
+          }
+        }
+      },
+      {
+        "id": "swords_10",
+        "name": "寶劍十",
+        "nameEn": "Ten of Swords",
+        "number": 10,
+        "suit": "swords",
+        "image": "/images/cards/swords_10.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["結束", "背叛", "痛苦", "失敗", "新開始"],
+            "keywordsEn": [
+              "Endings",
+              "Betrayal",
+              "Pain",
+              "Failure",
+              "New beginnings"
+            ],
+            "description": "寶劍十代表痛苦的結束和徹底的失敗。但它也象徵著最黑暗時刻的過去和新開始的可能。",
+            "descriptionEn": "Ten of Swords represents painful endings and complete failure. But it also symbolizes the passing of darkest moments and possibility of new beginnings.",
+            "love": "在愛情中，寶劍十可能表示關係的痛苦結束或背叛。",
+            "loveEn": "In love, Ten of Swords may indicate painful end of relationship or betrayal.",
+            "career": "事業上，寶劍十暗示計劃的失敗或工作的結束。",
+            "careerEn": "In career, Ten of Swords suggests failure of plans or end of work.",
+            "health": "健康方面，寶劍十代表身心的極度疲憊或疾病的低潮。",
+            "healthEn": "Regarding health, Ten of Swords represents extreme physical and mental exhaustion or illness low point.",
+            "spiritual": "靈性上，寶劍十象徵著精神的死亡與重生。",
+            "spiritualEn": "Spiritually, Ten of Swords symbolizes spiritual death and rebirth."
+          },
+          "reversed": {
+            "keywords": ["復原", "重新開始", "希望", "康復", "學習教訓"],
+            "keywordsEn": [
+              "Recovery",
+              "Fresh start",
+              "Hope",
+              "Healing",
+              "Learning lessons"
+            ],
+            "description": "逆位的寶劍十表示從痛苦中復原和重新開始的機會。",
+            "descriptionEn": "Reversed Ten of Swords indicates recovery from pain and opportunity for fresh start.",
+            "love": "感情中可能從傷痛中走出，準備迎接新的愛情。",
+            "loveEn": "In relationships, you may emerge from hurt and prepare for new love.",
+            "career": "工作上可能從失敗中學習，準備新的機會。",
+            "careerEn": "At work, you may learn from failure and prepare for new opportunities.",
+            "health": "健康方面可能開始康復或找到治療的希望。",
+            "healthEn": "Regarding health, you may begin recovery or find hope for treatment.",
+            "spiritual": "靈性發展可能從困境中獲得重要的領悟。",
+            "spiritualEn": "Spiritual development may gain important insights from difficulties."
+          }
+        }
+      }
+    ],
+    "pentacles": [
+      {
+        "id": "pentacles_01",
+        "name": "錢幣一",
+        "nameEn": "Ace of Pentacles",
+        "number": 1,
+        "suit": "pentacles",
+        "image": "/images/cards/pentacles_01.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["新機會", "物質成功", "繁榮", "實現", "豐盛"],
+            "keywordsEn": [
+              "New opportunities",
+              "Material success",
+              "Prosperity",
+              "Manifestation",
+              "Abundance"
+            ],
+            "description": "錢幣一代表物質世界的新機會和繁榮的開始。它象徵著實際成果的實現。",
+            "descriptionEn": "Ace of Pentacles represents new opportunities in material world and beginning of prosperity. It symbolizes realization of practical results.",
+            "love": "在愛情中，錢幣一可能表示關係的穩定發展或物質基礎的建立。",
+            "loveEn": "In love, Ace of Pentacles may indicate stable relationship development or establishing material foundation.",
+            "career": "事業上，錢幣一暗示新工作機會或財務收入的增加。",
+            "careerEn": "In career, Ace of Pentacles suggests new job opportunities or increased financial income.",
+            "health": "健康方面，錢幣一代表身體狀況的改善或新的治療方法。",
+            "healthEn": "Regarding health, Ace of Pentacles represents improvement in physical condition or new treatment methods.",
+            "spiritual": "靈性上，錢幣一象徵著精神理念在物質世界的實現。",
+            "spiritualEn": "Spiritually, Ace of Pentacles symbolizes realization of spiritual concepts in the material world."
+          },
+          "reversed": {
+            "keywords": [
+              "錯失機會",
+              "財務問題",
+              "缺乏實際行動",
+              "貪婪",
+              "物質主義"
+            ],
+            "keywordsEn": [
+              "Missed opportunities",
+              "Financial problems",
+              "Lack of practical action",
+              "Greed",
+              "Materialism"
+            ],
+            "description": "逆位的錢幣一可能表示錯失機會或過度的物質主義。",
+            "descriptionEn": "Reversed Ace of Pentacles may indicate missed opportunities or excessive materialism.",
+            "love": "感情中可能過於注重物質條件而忽視情感。",
+            "loveEn": "In relationships, you may focus too much on material conditions while ignoring emotions.",
+            "career": "工作上可能因為貪心或不切實際而失去機會。",
+            "careerEn": "At work, you may lose opportunities due to greed or being unrealistic.",
+            "health": "健康方面可能因為生活習慣不良而出現問題。",
+            "healthEn": "Regarding health, problems may arise due to poor lifestyle habits.",
+            "spiritual": "靈性發展可能受到物質慾望的阻礙。",
+            "spiritualEn": "Spiritual development may be hindered by material desires."
+          }
+        }
+      },
+      {
+        "id": "pentacles_10",
+        "name": "錢幣十",
+        "nameEn": "Ten of Pentacles",
+        "number": 10,
+        "suit": "pentacles",
+        "image": "/images/cards/pentacles_10.jpg",
+        "meanings": {
+          "upright": {
+            "keywords": ["財富", "家族傳承", "安全感", "成功", "世代傳承"],
+            "keywordsEn": [
+              "Wealth",
+              "Family legacy",
+              "Security",
+              "Success",
+              "Generational inheritance"
+            ],
+            "description": "錢幣十代表物質的豐盛和家族的傳承。它象徵著長期的成功和穩定的基礎。",
+            "descriptionEn": "Ten of Pentacles represents material abundance and family legacy. It symbolizes long-term success and stable foundation.",
+            "love": "在愛情中，錢幣十表示穩定的家庭生活和長久的承諾。",
+            "loveEn": "In love, Ten of Pentacles indicates stable family life and long-term commitment.",
+            "career": "事業上，錢幣十暗示事業的成功和財富的累積。",
+            "careerEn": "In career, Ten of Pentacles suggests business success and wealth accumulation.",
+            "health": "健康方面，錢幣十代表身體的強健和長壽。",
+            "healthEn": "Regarding health, Ten of Pentacles represents physical strength and longevity.",
+            "spiritual": "靈性上，錢幣十象徵著精神財富的傳承和智慧的分享。",
+            "spiritualEn": "Spiritually, Ten of Pentacles symbolizes inheritance of spiritual wealth and sharing of wisdom."
+          },
+          "reversed": {
+            "keywords": ["財務不穩", "家庭問題", "短視", "損失", "缺乏規劃"],
+            "keywordsEn": [
+              "Financial instability",
+              "Family problems",
+              "Short-sightedness",
+              "Loss",
+              "Lack of planning"
+            ],
+            "description": "逆位的錢幣十可能表示財務的不穩定或家庭關係的問題。",
+            "descriptionEn": "Reversed Ten of Pentacles may indicate financial instability or family relationship problems.",
+            "love": "感情中可能因為金錢問題而產生衝突。",
+            "loveEn": "In relationships, conflicts may arise due to money issues.",
+            "career": "工作上可能面臨財務損失或事業的挫折。",
+            "careerEn": "At work, you may face financial losses or business setbacks.",
+            "health": "健康方面可能因為壓力而影響身體狀況。",
+            "healthEn": "Regarding health, physical condition may be affected by stress.",
+            "spiritual": "靈性發展可能受到物質焦慮的干擾。",
+            "spiritualEn": "Spiritual development may be disturbed by material anxieties."
+          }
+        }
+      }
+    ]
+  }
+}

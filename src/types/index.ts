@@ -21,24 +21,36 @@ export type Theme = 'light' | 'dark' | 'auto';
 export type ReadingType = 'free' | 'daily';
 
 /**
- * 塔羅牌含義結構
+ * 塔羅牌含義結構（支援雙語）
  */
 export interface TarotMeanings {
   upright: {
     keywords: string[];
+    keywordsEn: string[];
     description: string;
+    descriptionEn: string;
     love: string;
+    loveEn: string;
     career: string;
+    careerEn: string;
     health: string;
+    healthEn: string;
     spiritual: string;
+    spiritualEn: string;
   };
   reversed: {
     keywords: string[];
+    keywordsEn: string[];
     description: string;
+    descriptionEn: string;
     love: string;
+    loveEn: string;
     career: string;
+    careerEn: string;
     health: string;
+    healthEn: string;
     spiritual: string;
+    spiritualEn: string;
   };
 }
 
@@ -140,9 +152,21 @@ export interface InterpretationFrameworks {
 }
 
 /**
+ * 塔羅牌資料庫資訊
+ */
+export interface TarotDatabaseInfo {
+  totalCards: number;
+  majorArcana: number;
+  minorArcana: number;
+  languages: Language[];
+  version: string;
+}
+
+/**
  * 塔羅牌資料庫結構
  */
 export interface TarotDatabase {
+  info: TarotDatabaseInfo;
   majorArcana: TarotCard[];
   minorArcana: {
     cups: TarotCard[];
