@@ -13,7 +13,7 @@ interface DrawingAreaProps {
   cardSize?: 'sm' | 'md' | 'lg' | 'xl';
   showPositionLabels?: boolean;
   isAnimating?: boolean;
-  interpretationFramework?: InterpretationFramework;
+  interpretationFramework?: InterpretationFramework | null;
   showInterpretation?: boolean;
 }
 
