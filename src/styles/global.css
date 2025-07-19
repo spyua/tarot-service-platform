@@ -1,0 +1,84 @@
+/* Global Styles for Tarot Web App */
+
+/* Custom Text Gradient */
+.text-gradient {
+  @apply bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent;
+}
+
+/* Card Component */
+.card {
+  @apply bg-white rounded-xl shadow-md transition-all duration-300;
+}
+
+.card:hover {
+  @apply shadow-xl;
+}
+
+/* Button Components */
+.btn-primary {
+  @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300;
+}
+
+.btn-secondary {
+  @apply bg-accent-100 hover:bg-accent-200 text-accent-600 font-medium py-3 px-6 rounded-lg transition-colors duration-300;
+}
+
+.btn-outline {
+  @apply border border-primary-600 text-primary-600 hover:bg-primary-50 font-medium py-3 px-6 rounded-lg transition-colors duration-300;
+}
+
+/* Page Transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Responsive Typography */
+@media (max-width: 640px) {
+  h1 {
+    @apply text-3xl;
+  }
+  
+  h2 {
+    @apply text-xl;
+  }
+}
+
+/* Accessibility Focus Styles */
+:focus {
+  @apply outline-none ring-2 ring-primary-500 ring-opacity-50;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-400;
+}

@@ -3,6 +3,8 @@ import { BrowserRouter as Router, useRoutes } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import { routes } from '@/router';
+import { AnimationProvider } from './components/animations/AnimationContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 // Router component using the new useRoutes hook for better performance
 function AppRoutes() {
@@ -12,13 +14,17 @@ function AppRoutes() {
 
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Suspense fallback={<LoadingSpinner />}>
-          <AppRoutes />
-        </Suspense>
-      </Layout>
-    </Router>
+    <AnimationProvider>
+      <Router>
+        <LanguageProvider>
+          <Layout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <AppRoutes />
+            </Suspense>
+          </Layout>
+        </LanguageProvider>
+      </Router>
+    </AnimationProvider>
   );
 }
 

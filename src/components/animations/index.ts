@@ -1,5 +1,6 @@
-// Animation components using Framer Motion
-// Export components as they are created
-
-// Placeholder - will be populated in future tasks
-export {};
+// Export all animation related components and utilities
+export * from './cardAnimations';
+export * from './pageTransitions';
+export * from './AnimationContext';
+export * from './AnimatedCard';
+export * from './AnimatedContainer';

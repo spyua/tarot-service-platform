@@ -1,0 +1,104 @@
+/* Animation System Styles */
+
+/* 3D Transform Styles */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Rotation Classes */
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Animation Keyframes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.8));
+  }
+}
+
+@keyframes shuffle {
+  0%, 100% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(5px) translateY(-3px) rotate(2deg);
+  }
+  50% {
+    transform: translateX(-5px) translateY(2px) rotate(-1deg);
+  }
+  75% {
+    transform: translateX(3px) translateY(-1px) rotate(1deg);
+  }
+}
+
+/* Animation Utility Classes */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-shuffle {
+  animation: shuffle 0.5s ease-in-out;
+}
+
+/* Transition Utilities */
+.transition-all {
+  transition-property: all;
+}
+
+.transition-transform {
+  transition-property: transform;
+}
+
+.transition-opacity {
+  transition-property: opacity;
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.duration-500 {
+  transition-duration: 500ms;
+}
+
+.duration-700 {
+  transition-duration: 700ms;
+}
+
+/* Easing Functions */
+.ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ease-out {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ease-in {
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
