@@ -151,19 +151,14 @@ class TarotDeck {
 }
 
 /**
- * 無視論占卜流程控制器
- * 實現需求1中的無視論占卜程序
+ * 無視論抽牌控制器
+ * 實現需求1中的無視論抽牌系統
  */
 class FreeReadingController {
   private deck: TarotDeck;
-  private question: string = '';
   
   constructor() {
     this.deck = new TarotDeck();
-  }
-  
-  setQuestion(question: string): void {
-    this.question = question;
   }
   
   getCardCountOptions(): number[] {
@@ -178,29 +173,22 @@ class FreeReadingController {
       timestamp: Date.now(),
       type: 'free',
       cards,
-      question: this.question,
       interpretation: this.generateInterpretation(cards)
     };
   }
   
   private generateInterpretation(cards: DrawnCard[]): string {
-    // 根據牌陣生成初步解讀
-    return `根據您的問題「${this.question}」，塔羅牌顯示...`;
+    // 根據抽到的牌面生成整體解讀
+    const interpretations = cards.map((card, index) => {
+      const meaning = card.isReversed ? card.card.meanings.reversed : card.card.meanings.upright;
+      return `第${index + 1}張牌：${card.card.name}${card.isReversed ? '（逆位）' : '（正位）'}\n${meaning.description}`;
+    });
+    
+    return interpretations.join('\n\n') + '\n\n整體建議：根據您抽到的牌面，建議您保持開放的心態，相信內在的智慧指引。';
   }
   
-  getReadingGuidance(): string[] {
-    return [
-      '哪張牌第一眼吸引你？',
-      '正／逆位比例是否有強烈訊號？',
-      '三張牌有沒有像故事裡的起承轉合？',
-      '若把它當一幅圖畫，你看到什麼？',
-      '這些牌整體給你的感受或一句話是？'
-    ];
-  }
-  
-  getSummaryAdvice(cards: DrawnCard[]): string {
-    // 生成一句話總結建議
-    return '塔羅的智慧提醒您...';
+  resetDeck(): void {
+    this.deck.resetUsedCards();
   }
 }
 ```
