@@ -203,12 +203,38 @@ export interface LoadingState {
 }
 
 /**
+ * 分享平台類型
+ */
+export type SharePlatform = 'facebook' | 'twitter' | 'instagram' | 'line' | 'copy';
+
+/**
  * 分享選項
  */
 export interface ShareOptions {
-  includeInterpretation: boolean;
+  platform: SharePlatform;
   includeImage: boolean;
-  platform?: 'facebook' | 'twitter' | 'instagram' | 'line';
+  includeInterpretation: boolean;
+  includeQuestion: boolean;
+}
+
+/**
+ * 分享內容
+ */
+export interface ShareContent {
+  text: string;
+  imageUrl?: string | undefined;
+  url?: string | undefined;
+}
+
+/**
+ * 隱私設定
+ */
+export interface PrivacySettings {
+  allowSharing: boolean;
+  shareCardNames: boolean;
+  shareInterpretation: boolean;
+  shareQuestion: boolean;
+  anonymousAnalytics: boolean;
 }
 
 /**

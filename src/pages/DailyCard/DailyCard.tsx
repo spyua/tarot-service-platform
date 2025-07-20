@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDailyCard } from '../../hooks/useDailyCard';
 import TarotDeck from '../../components/cards/TarotDeck';
 import CardDetails from '../../components/cards/CardDetails';
-import { Language } from '../../types';
+import ShareButton from '../../components/common/ShareButton';
+import { Language, ReadingResult } from '../../types';
 import { pageTransition } from '../../utils/animations';
 
 /**
@@ -44,6 +45,25 @@ export default function DailyCard() {
   // 處理語言切換
   const handleLanguageChange = (lang: Language) => {
     setLanguage(lang);
+  };
+
+  // 將每日抽牌記錄轉換為 ReadingResult 格式以供分享
+  const convertToReadingResult = (): ReadingResult | null => {
+    if (!todayCard) return null;
+
+    const interpretation = `今日指導：${todayCard.card.card.name}${todayCard.card.isReversed ? '（逆位）' : '（正位）'}\n\n` +
+      `身體健康：${todayCard.aspects.physical}\n\n` +
+      `心理情緒：${todayCard.aspects.emotional}\n\n` +
+      `靈性成長：${todayCard.aspects.spiritual}`;
+
+    return {
+      id: `daily_${todayCard.date}`,
+      timestamp: new Date(todayCard.date).getTime(),
+      type: 'daily',
+      cards: [todayCard.card],
+      interpretation,
+      aspects: todayCard.aspects
+    };
   };
 
   // 渲染抽牌區域
@@ -118,6 +138,19 @@ export default function DailyCard() {
                   {activeTab === 'spiritual' && todayCard.aspects.spiritual}
                 </motion.div>
               </AnimatePresence>
+            </div>
+            
+            {/* 分享按鈕 */}
+            <div className="flex justify-center mt-6">
+              {(() => {
+                const readingResult = convertToReadingResult();
+                return readingResult ? (
+                  <ShareButton 
+                    reading={readingResult} 
+                    className="w-full sm:w-auto"
+                  />
+                ) : null;
+              })()}
             </div>
           </div>
         </motion.div>

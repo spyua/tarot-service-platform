@@ -5,6 +5,7 @@ import { DrawnCard, ReadingResult } from '../../types';
 import { storageService } from '../../services/StorageService';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '../../components/common/Button';
+import ShareButton from '../../components/common/ShareButton';
 
 /**
  * 無視論抽牌頁面
@@ -18,6 +19,7 @@ const FreeReading: React.FC = () => {
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [selectedCard, setSelectedCard] = useState<DrawnCard | null>(null);
+  const [currentReading, setCurrentReading] = useState<ReadingResult | null>(null);
 
   // 模擬塔羅牌資料（實際應該從服務獲取）
   const mockTarotCards = [
@@ -101,6 +103,7 @@ const FreeReading: React.FC = () => {
         interpretation: generateInterpretation(cards)
       };
       
+      setCurrentReading(readingResult);
       storageService.saveReading(readingResult);
     }, 2000);
   };
@@ -122,6 +125,7 @@ const FreeReading: React.FC = () => {
   const handleRedraw = () => {
     setDrawnCards([]);
     setSelectedCard(null);
+    setCurrentReading(null);
   };
 
   // 處理卡片點擊
@@ -221,9 +225,15 @@ const FreeReading: React.FC = () => {
         </div>
       </div>
 
-      {/* 重新抽牌按鈕 */}
-      <div className="text-center">
-        <Button onClick={handleRedraw} variant="outline" className="px-8 py-3">
+      {/* 分享和重新抽牌按鈕 */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        {currentReading && (
+          <ShareButton 
+            reading={currentReading} 
+            className="w-full sm:w-auto"
+          />
+        )}
+        <Button onClick={handleRedraw} variant="outline" className="px-8 py-3 w-full sm:w-auto">
           重新抽牌
         </Button>
       </div>
