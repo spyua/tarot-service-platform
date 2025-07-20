@@ -75,7 +75,7 @@ export class StorageService {
    * 將資料保存到本地存儲
    * @param data 要保存的資料
    */
-  private setData(data: LocalStorageData): void {
+  public setData(data: LocalStorageData): void {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
     } catch (error) {

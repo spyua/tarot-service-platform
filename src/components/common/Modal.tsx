@@ -1,37 +1,37 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { createPortal } from 'react-dom';
-import { modalBackdrop, modalContent } from '@/utils/animations';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  closeOnBackdrop?: boolean;
-  closeOnEscape?: boolean;
-  showCloseButton?: boolean;
-  className?: string;
   children: React.ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  showCloseButton?: boolean;
+  closeOnOverlayClick?: boolean;
+  className?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   title,
+  children,
   size = 'md',
-  closeOnBackdrop = true,
-  closeOnEscape = true,
   showCloseButton = true,
-  className = '',
-  children
+  closeOnOverlayClick = true,
+  className = ''
 }) => {
-  const modalRef = useRef<HTMLDivElement>(null);
+  const sizeClasses = {
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl'
+  };
 
   // Handle escape key
   useEffect(() => {
-    if (!closeOnEscape) return;
-
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
         onClose();
@@ -40,9 +40,9 @@ const Modal: React.FC<ModalProps> = ({
 
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onClose, closeOnEscape]);
+  }, [isOpen, onClose]);
 
-  // Handle body scroll lock
+  // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -55,118 +55,63 @@ const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen]);
 
-  // Handle backdrop click
-  const handleBackdropClick = (event: React.MouseEvent) => {
-    if (closeOnBackdrop && event.target === event.currentTarget) {
-      onClose();
-    }
-  };
-
-  // Size styles
-  const sizeStyles = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl'
-  };
-
-  if (!isOpen) return null;
-
-  const modalElement = (
+  return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          {/* Overlay */}
           <motion.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-            variants={modalBackdrop}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            onClick={handleBackdropClick}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm"
+            onClick={closeOnOverlayClick ? onClose : undefined}
           />
 
-          {/* Modal Content */}
-          <motion.div
-            ref={modalRef}
-            className={`relative w-full ${sizeStyles[size]} bg-white rounded-xl shadow-2xl ${className}`}
-            variants={modalContent}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            {/* Header */}
-            {(title || showCloseButton) && (
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                {title && (
-                  <h2 className="text-xl font-semibold text-gray-900 font-primary">
-                    {title}
-                  </h2>
-                )}
-                {showCloseButton && (
-                  <button
-                    onClick={onClose}
-                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                    aria-label="關閉對話框"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+          {/* Modal */}
+          <div className="flex min-h-full items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className={`
+                relative w-full ${sizeClasses[size]} bg-white dark:bg-gray-800 rounded-lg shadow-xl
+                ${className}
+              `}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              {(title || showCloseButton) && (
+                <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                  {title && (
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      {title}
+                    </h3>
+                  )}
+                  {showCloseButton && (
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                )}
-              </div>
-            )}
+                      <XMarkIcon className="w-6 h-6" />
+                    </button>
+                  )}
+                </div>
+              )}
 
-            {/* Content */}
-            <div className="p-6">
-              {children}
-            </div>
-          </motion.div>
+              {/* Content */}
+              <div className="p-6">
+                {children}
+              </div>
+            </motion.div>
+          </div>
         </div>
       )}
     </AnimatePresence>
   );
-
-  // Render modal in portal
-  return createPortal(modalElement, document.body);
 };
-
-// Modal sub-components for better composition
-export const ModalHeader: React.FC<{ className?: string; children: React.ReactNode }> = ({ 
-  className = '', 
-  children 
-}) => (
-  <div className={`mb-4 ${className}`}>
-    {children}
-  </div>
-);
-
-export const ModalBody: React.FC<{ className?: string; children: React.ReactNode }> = ({ 
-  className = '', 
-  children 
-}) => (
-  <div className={`mb-6 ${className}`}>
-    {children}
-  </div>
-);
-
-export const ModalFooter: React.FC<{ className?: string; children: React.ReactNode }> = ({ 
-  className = '', 
-  children 
-}) => (
-  <div className={`flex justify-end space-x-3 pt-4 border-t border-gray-200 ${className}`}>
-    {children}
-  </div>
-);
 
 export default Modal;
