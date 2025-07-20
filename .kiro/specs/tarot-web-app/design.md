@@ -94,6 +94,7 @@ interface ReadingResult {
   type: 'free' | 'daily';
   cards: DrawnCard[];
   interpretation: string;
+  question?: string; // 無視論占卜的問題
   aspects?: {
     physical: string;
     emotional: string;
@@ -111,7 +112,7 @@ interface DrawnCard {
 
 ### 2. 抽牌系統設計
 
-**隨機抽牌演算法**
+**無視論抽牌系統**
 ```typescript
 class TarotDeck {
   private cards: TarotCard[];
@@ -142,6 +143,64 @@ class TarotDeck {
     }
     
     return drawnCards;
+  }
+  
+  resetDeck(): void {
+    this.usedCards.clear();
+  }
+}
+
+/**
+ * 無視論占卜流程控制器
+ * 實現需求1中的無視論占卜程序
+ */
+class FreeReadingController {
+  private deck: TarotDeck;
+  private question: string = '';
+  
+  constructor() {
+    this.deck = new TarotDeck();
+  }
+  
+  setQuestion(question: string): void {
+    this.question = question;
+  }
+  
+  getCardCountOptions(): number[] {
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9]; // 提供1-9張牌的選擇
+  }
+  
+  performReading(cardCount: number): ReadingResult {
+    const cards = this.deck.drawCards(cardCount);
+    
+    return {
+      id: generateUniqueId(),
+      timestamp: Date.now(),
+      type: 'free',
+      cards,
+      question: this.question,
+      interpretation: this.generateInterpretation(cards)
+    };
+  }
+  
+  private generateInterpretation(cards: DrawnCard[]): string {
+    // 根據牌陣生成初步解讀
+    return `根據您的問題「${this.question}」，塔羅牌顯示...`;
+  }
+  
+  getReadingGuidance(): string[] {
+    return [
+      '哪張牌第一眼吸引你？',
+      '正／逆位比例是否有強烈訊號？',
+      '三張牌有沒有像故事裡的起承轉合？',
+      '若把它當一幅圖畫，你看到什麼？',
+      '這些牌整體給你的感受或一句話是？'
+    ];
+  }
+  
+  getSummaryAdvice(cards: DrawnCard[]): string {
+    // 生成一句話總結建議
+    return '塔羅的智慧提醒您...';
   }
 }
 ```
@@ -643,6 +702,513 @@ describe('每日抽牌功能', () => {
 - 字體：本地託管避免外部依賴
 - 關鍵 CSS：內聯到 HTML
 
+## 多語言和文化適配
+
+### 多語言系統設計
+
+**i18n 架構**
+```typescript
+// 語言配置
+const supportedLanguages = {
+  'zh-TW': '繁體中文',
+  'en': 'English'
+};
+
+// 語言上下文
+interface LanguageContextType {
+  language: string;
+  setLanguage: (lang: string) => void;
+  t: (key: string, params?: Record<string, string>) => string;
+}
+
+// 翻譯鍵值結構
+interface TranslationMap {
+  [key: string]: {
+    [language: string]: string;
+  };
+}
+```
+
+**文化適配策略**
+- 預設使用繁體中文介面
+- 塔羅牌解讀內容根據東方文化背景調整
+- 考慮台灣地區用戶的文化習慣和表達方式
+- 英文版本提供完整的西方塔羅解讀傳統
+
+### 語言切換機制
+
+```typescript
+function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [language, setLanguage] = useState(getInitialLanguage());
+  
+  // 從本地存儲或瀏覽器設置獲取初始語言
+  function getInitialLanguage(): string {
+    const storedLang = localStorage.getItem('tarot-language');
+    if (storedLang && Object.keys(supportedLanguages).includes(storedLang)) {
+      return storedLang;
+    }
+    
+    // 檢測瀏覽器語言
+    const browserLang = navigator.language;
+    if (browserLang.startsWith('zh')) {
+      return 'zh-TW';
+    }
+    
+    return 'zh-TW'; // 預設繁體中文
+  }
+  
+  // 翻譯函數
+  const t = useCallback((key: string, params?: Record<string, string>) => {
+    let text = translations[key]?.[language] || key;
+    
+    if (params) {
+      Object.entries(params).forEach(([param, value]) => {
+        text = text.replace(`{{${param}}}`, value);
+      });
+    }
+    
+    return text;
+  }, [language]);
+  
+  // 切換語言並保存到本地存儲
+  const handleSetLanguage = useCallback((lang: string) => {
+    if (Object.keys(supportedLanguages).includes(lang)) {
+      setLanguage(lang);
+      localStorage.setItem('tarot-language', lang);
+      document.documentElement.lang = lang;
+    }
+  }, []);
+  
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+```
+
+## 社群分享和統計分析
+
+### 社群分享功能
+
+**分享內容生成**
+```typescript
+interface ShareOptions {
+  platform: 'facebook' | 'twitter' | 'line' | 'instagram' | 'copy';
+  includeImage: boolean;
+  includeInterpretation: boolean;
+  includeQuestion: boolean;
+}
+
+class SharingService {
+  generateShareContent(reading: ReadingResult, options: ShareOptions): ShareContent {
+    const { cards, interpretation, question, timestamp } = reading;
+    
+    // 基本分享文字
+    let text = '我的塔羅占卜結果：';
+    
+    // 添加抽到的牌
+    const cardNames = cards.map(c => 
+      `${c.card.name}${c.isReversed ? '(逆位)' : ''}`
+    ).join('、');
+    text += `\n抽到的牌：${cardNames}`;
+    
+    // 根據選項添加問題
+    if (options.includeQuestion && question) {
+      text += `\n我的問題：${question}`;
+    }
+    
+    // 根據選項添加解讀
+    if (options.includeInterpretation) {
+      text += `\n解讀：${this.truncateText(interpretation, 100)}`;
+    }
+    
+    // 添加應用程式連結
+    text += '\n\n透過塔羅占卜網頁應用程式獲取您的占卜 #塔羅占卜 #TarotReading';
+    
+    return {
+      text,
+      imageUrl: options.includeImage ? this.generateShareImage(cards) : undefined,
+      url: `https://tarot-app.example.com/shared/${reading.id}`
+    };
+  }
+  
+  private truncateText(text: string, maxLength: number): string {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  }
+  
+  private generateShareImage(cards: DrawnCard[]): string {
+    // 生成分享圖片的邏輯
+    // 實際實現可能使用 Canvas API 或後端服務
+    return '/api/generate-share-image?cards=' + cards.map(c => `${c.card.id},${c.isReversed ? 1 : 0}`).join('-');
+  }
+  
+  share(platform: ShareOptions['platform'], content: ShareContent): Promise<boolean> {
+    switch (platform) {
+      case 'facebook':
+        return this.shareToFacebook(content);
+      case 'twitter':
+        return this.shareToTwitter(content);
+      case 'line':
+        return this.shareToLine(content);
+      case 'instagram':
+        return this.shareToInstagram(content);
+      case 'copy':
+        return this.copyToClipboard(content.text);
+      default:
+        return Promise.resolve(false);
+    }
+  }
+  
+  // 實現各平台分享方法...
+}
+```
+
+**隱私保護機制**
+```typescript
+class PrivacyManager {
+  // 用戶隱私設置
+  private settings = {
+    allowSharing: true,
+    shareCardNames: true,
+    shareInterpretation: false,
+    shareQuestion: false,
+    anonymousAnalytics: true
+  };
+  
+  // 載入用戶隱私設置
+  loadSettings(): void {
+    const stored = localStorage.getItem('privacy-settings');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        this.settings = { ...this.settings, ...parsed };
+      } catch (e) {
+        console.error('Failed to parse privacy settings');
+      }
+    }
+  }
+  
+  // 保存用戶隱私設置
+  saveSettings(settings: Partial<typeof this.settings>): void {
+    this.settings = { ...this.settings, ...settings };
+    localStorage.setItem('privacy-settings', JSON.stringify(this.settings));
+  }
+  
+  // 檢查是否允許分享特定內容
+  canShare(contentType: keyof typeof this.settings): boolean {
+    return this.settings.allowSharing && this.settings[contentType];
+  }
+  
+  // 獲取分析追蹤許可
+  canTrackAnalytics(): boolean {
+    return this.settings.anonymousAnalytics;
+  }
+}
+```
+
+### 統計分析整合
+
+**Google Analytics 整合**
+```typescript
+class AnalyticsService {
+  private isInitialized = false;
+  private privacyManager: PrivacyManager;
+  
+  constructor(privacyManager: PrivacyManager) {
+    this.privacyManager = privacyManager;
+  }
+  
+  // 初始化 Google Analytics
+  initialize(): void {
+    if (this.isInitialized || !this.privacyManager.canTrackAnalytics()) {
+      return;
+    }
+    
+    // 載入 Google Analytics 腳本
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    document.head.appendChild(script);
+    
+    // 初始化 gtag
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function() {
+      window.dataLayer.push(arguments);
+    };
+    gtag('js', new Date());
+    gtag('config', GA_MEASUREMENT_ID, {
+      anonymize_ip: true,
+      send_page_view: false
+    });
+    
+    this.isInitialized = true;
+  }
+  
+  // 追蹤頁面瀏覽
+  trackPageView(path: string, title: string): void {
+    if (!this.isInitialized || !this.privacyManager.canTrackAnalytics()) {
+      return;
+    }
+    
+    gtag('event', 'page_view', {
+      page_path: path,
+      page_title: title
+    });
+  }
+  
+  // 追蹤抽牌事件
+  trackReading(type: 'free' | 'daily', cardCount: number): void {
+    if (!this.isInitialized || !this.privacyManager.canTrackAnalytics()) {
+      return;
+    }
+    
+    gtag('event', 'perform_reading', {
+      reading_type: type,
+      card_count: cardCount
+    });
+  }
+}
+```
+
+## 資料匯出和匯入功能
+
+### 資料管理
+
+**資料匯出功能**
+```typescript
+class DataExportService {
+  // 匯出所有用戶資料
+  exportAllData(): string {
+    const storageService = new StorageService();
+    const data = storageService.getData();
+    
+    // 將資料轉換為 JSON 字串
+    return JSON.stringify(data, null, 2);
+  }
+  
+  // 匯出特定類型的資料
+  exportData(dataType: 'readings' | 'dailyCards' | 'preferences'): string {
+    const storageService = new StorageService();
+    const data = storageService.getData();
+    
+    // 只匯出指定類型的資料
+    return JSON.stringify({ [dataType]: data[dataType] }, null, 2);
+  }
+  
+  // 下載資料為 JSON 檔案
+  downloadAsFile(data: string, filename: string): void {
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    
+    // 清理
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 0);
+  }
+}
+```
+
+**資料匯入功能**
+```typescript
+class DataImportService {
+  // 從 JSON 字串匯入資料
+  importFromJson(jsonString: string): boolean {
+    try {
+      const data = JSON.parse(jsonString);
+      
+      // 驗證資料結構
+      if (!this.validateData(data)) {
+        return false;
+      }
+      
+      const storageService = new StorageService();
+      const currentData = storageService.getData();
+      
+      // 合併資料
+      const mergedData = this.mergeData(currentData, data);
+      
+      // 儲存合併後的資料
+      storageService.setData(mergedData);
+      
+      return true;
+    } catch (e) {
+      console.error('匯入資料失敗:', e);
+      return false;
+    }
+  }
+  
+  // 驗證匯入的資料結構
+  private validateData(data: any): boolean {
+    // 檢查資料結構是否符合預期
+    if (!data) return false;
+    
+    // 檢查各個資料類型
+    if (data.readings && !Array.isArray(data.readings)) return false;
+    if (data.dailyCards && !Array.isArray(data.dailyCards)) return false;
+    if (data.userPreferences && typeof data.userPreferences !== 'object') return false;
+    
+    return true;
+  }
+  
+  // 合併現有資料和匯入資料
+  private mergeData(currentData: LocalStorageData, importedData: Partial<LocalStorageData>): LocalStorageData {
+    const result = { ...currentData };
+    
+    // 合併占卜記錄，避免重複
+    if (importedData.readings) {
+      const existingIds = new Set(currentData.readings.map(r => r.id));
+      const newReadings = importedData.readings.filter(r => !existingIds.has(r.id));
+      result.readings = [...newReadings, ...currentData.readings];
+    }
+    
+    // 合併每日抽牌記錄，避免重複
+    if (importedData.dailyCards) {
+      const existingDates = new Set(currentData.dailyCards.map(d => d.date));
+      const newDailyCards = importedData.dailyCards.filter(d => !existingDates.has(d.date));
+      result.dailyCards = [...newDailyCards, ...currentData.dailyCards];
+    }
+    
+    // 合併用戶偏好設定
+    if (importedData.userPreferences) {
+      result.userPreferences = {
+        ...currentData.userPreferences,
+        ...importedData.userPreferences
+      };
+    }
+    
+    return result;
+  }
+}
+```
+
+### 週期性趨勢分析
+
+**趨勢分析服務**
+```typescript
+class TrendAnalysisService {
+  // 分析每日抽牌趨勢
+  analyzeDailyCardTrends(dailyCards: DailyCardRecord[]): TrendAnalysis {
+    // 確保有足夠的資料進行分析
+    if (dailyCards.length < 7) {
+      return {
+        hasEnoughData: false,
+        message: '需要至少7天的資料才能進行趨勢分析'
+      };
+    }
+    
+    // 按時間排序
+    const sortedCards = [...dailyCards].sort((a, b) => 
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+    
+    // 分析牌組分布
+    const suitDistribution = this.analyzeSuitDistribution(sortedCards);
+    
+    // 分析正逆位比例
+    const reversalTrend = this.analyzeReversalTrend(sortedCards);
+    
+    // 分析主題趨勢
+    const thematicTrends = this.analyzeThematicTrends(sortedCards);
+    
+    return {
+      hasEnoughData: true,
+      period: {
+        start: sortedCards[0].date,
+        end: sortedCards[sortedCards.length - 1].date
+      },
+      suitDistribution,
+      reversalTrend,
+      thematicTrends,
+      summary: this.generateTrendSummary(suitDistribution, reversalTrend, thematicTrends)
+    };
+  }
+  
+  // 分析牌組分布
+  private analyzeSuitDistribution(cards: DailyCardRecord[]): SuitDistribution {
+    const distribution = {
+      major: 0,
+      cups: 0,
+      wands: 0,
+      swords: 0,
+      pentacles: 0
+    };
+    
+    cards.forEach(record => {
+      const suit = record.card.card.suit;
+      distribution[suit]++;
+    });
+    
+    return {
+      distribution,
+      dominant: this.getDominantSuit(distribution)
+    };
+  }
+  
+  // 分析正逆位趨勢
+  private analyzeReversalTrend(cards: DailyCardRecord[]): ReversalTrend {
+    const uprightCount = cards.filter(record => !record.card.isReversed).length;
+    const reversedCount = cards.filter(record => record.card.isReversed).length;
+    
+    return {
+      uprightCount,
+      reversedCount,
+      uprightPercentage: (uprightCount / cards.length) * 100,
+      reversedPercentage: (reversedCount / cards.length) * 100,
+      trend: this.getReversalTrendDirection(cards)
+    };
+  }
+  
+  // 分析主題趨勢
+  private analyzeThematicTrends(cards: DailyCardRecord[]): ThematicTrend[] {
+    // 實現主題分析邏輯
+    // 例如分析關鍵字出現頻率、情感傾向等
+    
+    return [
+      {
+        theme: '情感',
+        strength: 0.7,
+        keywords: ['愛', '關係', '情感', '連結']
+      },
+      {
+        theme: '事業',
+        strength: 0.4,
+        keywords: ['工作', '成就', '目標', '成功']
+      },
+      {
+        theme: '靈性',
+        strength: 0.6,
+        keywords: ['成長', '覺醒', '意識', '直覺']
+      }
+    ];
+  }
+  
+  // 生成趨勢摘要
+  private generateTrendSummary(
+    suitDistribution: SuitDistribution,
+    reversalTrend: ReversalTrend,
+    thematicTrends: ThematicTrend[]
+  ): string {
+    // 根據分析結果生成人類可讀的摘要
+    return `在過去的一段時間裡，您的塔羅牌顯示出${suitDistribution.dominant}的能量主導，
+            這表明您可能正在經歷${this.getSuitMeaning(suitDistribution.dominant)}。
+            ${reversalTrend.trend}。
+            主要的主題集中在${thematicTrends[0].theme}方面，
+            建議您關注這些領域的發展和變化。`;
+  }
+  
+  // 輔助方法...
+}
+```
+
 ## 安全性考量
 
 ### 內容安全政策
@@ -662,3 +1228,5 @@ describe('每日抽牌功能', () => {
 - 不收集個人識別資訊
 - 分析資料匿名化處理
 - 提供資料清除功能
+- 用戶可完全控制分享內容的隱私級別
+- 提供完全私密的占卜體驗選項
