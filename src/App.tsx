@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { BrowserRouter as Router, useRoutes } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
+import PWAUpdateNotification from '@/components/common/PWAUpdateNotification';
 import { routes } from '@/router';
 import { AnimationProvider } from './components/animations/AnimationContext';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -24,6 +25,7 @@ function App() {
                 <AppRoutes />
               </Suspense>
             </Layout>
+            <PWAUpdateNotification />
           </LanguageProvider>
         </Router>
       </AnimationProvider>

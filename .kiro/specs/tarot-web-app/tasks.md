@@ -148,7 +148,7 @@
   - 建立圖片快取和錯誤處理機制
   - _需求: 需求 8_
 
-- [ ] 19. 實作 PWA 功能
+- [x] 19. 實作 PWA 功能
   - 配置 Web App Manifest
   - 使用 Workbox 實作 Service Worker
   - 建立離線快取策略
