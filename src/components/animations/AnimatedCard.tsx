@@ -28,34 +28,35 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
   ...motionProps
 }) => {
   const { animationsEnabled, getAnimationDuration } = useAnimation();
-  
+
   // If animations are disabled, render without motion
   if (!animationsEnabled) {
     return (
-      <div 
-        className={className}
-        onClick={onClick}
-      >
+      <div className={className} onClick={onClick}>
         {children}
       </div>
     );
   }
-  
+
   // Select animation variants based on type
   const getVariants = () => {
     switch (animationType) {
-      case 'draw': return cardDrawVariants;
-      case 'flip': return cardFlipVariants;
-      case 'hover': return {
-        initial: {},
-        animate: {},
-        whileHover: { scale: 1.05, y: -5 },
-        whileTap: { scale: 0.98 }
-      };
-      default: return {};
+      case 'draw':
+        return cardDrawVariants;
+      case 'flip':
+        return cardFlipVariants;
+      case 'hover':
+        return {
+          initial: {},
+          animate: {},
+          whileHover: { scale: 1.05, y: -5 },
+          whileTap: { scale: 0.98 },
+        };
+      default:
+        return {};
     }
   };
-  
+
   // Get animation state based on type and props
   const getAnimationState = () => {
     if (animationType === 'flip') {
@@ -63,12 +64,12 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
     }
     return 'animate';
   };
-  
+
   // Apply custom transition delay
   const getTransition = () => {
     if (animationDelay > 0) {
       return {
-        delay: getAnimationDuration(animationDelay / 1000)
+        delay: getAnimationDuration(animationDelay / 1000),
       };
     }
     return {};
@@ -78,7 +79,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
     <AnimatePresence mode="wait">
       <motion.div
         className={`perspective-1000 ${className}`}
-        initial={animationType !== 'none' ? 'initial' : undefined}
+        initial={animationType !== 'none' ? 'initial' : false}
         animate={getAnimationState()}
         variants={getVariants()}
         custom={custom}

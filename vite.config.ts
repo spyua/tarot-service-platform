@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+// @ts-ignore - Import CommonJS module
+import imageOptimizationPlugin from './vite-plugins/imageOptimization';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,6 +15,19 @@ export default defineConfig({
           // Add any babel plugins if needed
         ],
       },
+    }),
+    imageOptimizationPlugin({
+      // Configure image optimization
+      include: /\.(png|jpe?g|gif)$/,
+      exclude: /node_modules/,
+      sizes: {
+        small: 300,
+        medium: 600,
+        large: 1000,
+      },
+      formats: ['webp', 'original'],
+      quality: 85,
+      outputDir: 'dist/images',
     }),
   ],
   resolve: {

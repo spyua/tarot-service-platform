@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "images": "node scripts/generateResponsiveImages.js",
+    "prebuild": "npm run images"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -35,6 +37,7 @@
     "eslint-plugin-react-refresh": "^0.4.4",
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
+    "sharp": "^0.33.5",
     "tailwindcss": "^3.3.5",
     "terser": "^5.43.1",
     "typescript": "^5.2.2",

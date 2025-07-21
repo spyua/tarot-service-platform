@@ -1,6 +1,338 @@
 import { DrawnCard } from '../types';
 
 /**
+ * 圖片格式類型
+ */
+export type ImageFormat = 'webp' | 'jpg' | 'png' | 'avif';
+
+/**
+ * 圖片尺寸類型
+ */
+export type ImageSize = 'small' | 'medium' | 'large' | 'original';
+
+/**
+ * 圖片尺寸配置
+ */
+export const IMAGE_SIZES = {
+  small: 300,
+  medium: 600,
+  large: 1000,
+  original: 2000,
+};
+
+/**
+ * 圖片快取管理器
+ */
+class ImageCache {
+  private static instance: ImageCache;
+  private cache: Map<string, HTMLImageElement> = new Map();
+  private inProgress: Map<string, Promise<HTMLImageElement>> = new Map();
+  private maxSize: number = 100; // 最大快取數量
+
+  private constructor() {}
+
+  /**
+   * 獲取單例實例
+   */
+  public static getInstance(): ImageCache {
+    if (!ImageCache.instance) {
+      ImageCache.instance = new ImageCache();
+    }
+    return ImageCache.instance;
+  }
+
+  /**
+   * 設置最大快取數量
+   */
+  public setMaxSize(size: number): void {
+    this.maxSize = size;
+    this.cleanup();
+  }
+
+  /**
+   * 從快取中獲取圖片
+   */
+  public get(src: string): HTMLImageElement | undefined {
+    return this.cache.get(src);
+  }
+
+  /**
+   * 檢查圖片是否在快取中
+   */
+  public has(src: string): boolean {
+    return this.cache.has(src);
+  }
+
+  /**
+   * 將圖片添加到快取
+   */
+  public set(src: string, img: HTMLImageElement): void {
+    this.cache.set(src, img);
+    this.cleanup();
+  }
+
+  /**
+   * 清理超出大小的快取
+   */
+  private cleanup(): void {
+    if (this.cache.size <= this.maxSize) return;
+
+    // 移除最舊的項目
+    const keysToDelete = Array.from(this.cache.keys()).slice(
+      0,
+      this.cache.size - this.maxSize
+    );
+    keysToDelete.forEach(key => this.cache.delete(key));
+  }
+
+  /**
+   * 預載入圖片並加入快取
+   */
+  public preload(
+    src: string,
+    options?: { priority?: boolean; retries?: number }
+  ): Promise<HTMLImageElement> {
+    const { priority = false, retries = 2 } = options || {};
+
+    // 如果已經在快取中，直接返回
+    if (this.cache.has(src)) {
+      return Promise.resolve(this.cache.get(src)!);
+    }
+
+    // 如果正在載入中，返回進行中的 Promise
+    if (this.inProgress.has(src)) {
+      return this.inProgress.get(src)!;
+    }
+
+    // 創建新的載入 Promise
+    const loadPromise = this.loadImage(src, retries);
+
+    // 如果是高優先級，不存儲進行中的 Promise
+    if (!priority) {
+      this.inProgress.set(src, loadPromise);
+    }
+
+    // 完成後從進行中列表移除
+    loadPromise
+      .then(img => {
+        this.cache.set(src, img);
+        this.inProgress.delete(src);
+        return img;
+      })
+      .catch(() => {
+        this.inProgress.delete(src);
+      });
+
+    return loadPromise;
+  }
+
+  /**
+   * 載入圖片
+   */
+  private loadImage(
+    src: string,
+    retries: number = 2
+  ): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous'; // 允許跨域圖片
+
+      img.onload = () => resolve(img);
+
+      img.onerror = () => {
+        if (retries > 0) {
+          // 添加隨機參數避免快取
+          const retrySrc = `${src}${src.includes('?') ? '&' : '?'}retry=${Date.now()}`;
+          this.loadImage(retrySrc, retries - 1)
+            .then(resolve)
+            .catch(reject);
+        } else {
+          reject(new Error(`無法載入圖片: ${src}`));
+        }
+      };
+
+      img.src = src;
+    });
+  }
+
+  /**
+   * 清除快取
+   */
+  public clear(): void {
+    this.cache.clear();
+    this.inProgress.clear();
+  }
+}
+
+/**
+ * 獲取圖片快取實例
+ */
+export const getImageCache = (): ImageCache => {
+  return ImageCache.getInstance();
+};
+
+/**
+ * 載入圖片
+ */
+export const loadImage = (
+  src: string,
+  options?: { priority?: boolean; retries?: number }
+): Promise<HTMLImageElement> => {
+  return ImageCache.getInstance().preload(src, options);
+};
+
+/**
+ * 檢測瀏覽器是否支援特定圖片格式
+ */
+export const supportsImageFormat = (format: ImageFormat): boolean => {
+  const formats: Record<ImageFormat, string> = {
+    webp: 'image/webp',
+    avif: 'image/avif',
+    jpg: 'image/jpeg',
+    png: 'image/png',
+  };
+
+  // 檢查是否在瀏覽器環境
+  if (typeof document === 'undefined') return false;
+
+  // 創建一個測試元素
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return false;
+
+  // Test WebP support by creating a data URL
+  if (format === 'webp') {
+    return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+  }
+
+  // Test AVIF support (limited browser support)
+  if (format === 'avif') {
+    try {
+      return canvas.toDataURL('image/avif').indexOf('data:image/avif') === 0;
+    } catch {
+      return false;
+    }
+  }
+
+  // JPG and PNG are universally supported
+  return true;
+};
+
+/**
+ * 獲取最佳圖片格式
+ */
+export const getBestImageFormat = (): ImageFormat => {
+  if (supportsImageFormat('avif')) return 'avif';
+  if (supportsImageFormat('webp')) return 'webp';
+  return 'jpg';
+};
+
+/**
+ * 生成響應式圖片路徑
+ */
+export const getResponsiveImagePath = (
+  src: string,
+  size: ImageSize = 'original',
+  format?: ImageFormat
+): string => {
+  // 如果沒有指定格式，使用最佳格式
+  const bestFormat = format || getBestImageFormat();
+
+  // 解析原始路徑
+  const lastDotIndex = src.lastIndexOf('.');
+  if (lastDotIndex === -1) return src;
+
+  const basePath = src.substring(0, lastDotIndex);
+
+  // 如果是原始尺寸，只轉換格式
+  if (size === 'original') {
+    return `${basePath}.${bestFormat}`;
+  }
+
+  // 返回指定尺寸和格式的路徑
+  return `${basePath}-${size}.${bestFormat}`;
+};
+
+/**
+ * 生成 srcset 屬性
+ */
+export const generateSrcSet = (src: string, format?: ImageFormat): string => {
+  const bestFormat = format || getBestImageFormat();
+
+  // 解析原始路徑
+  const lastDotIndex = src.lastIndexOf('.');
+  if (lastDotIndex === -1) return src;
+
+  const basePath = src.substring(0, lastDotIndex);
+
+  // 生成不同尺寸的 srcset
+  return [
+    `${basePath}-small.${bestFormat} ${IMAGE_SIZES.small}w`,
+    `${basePath}-medium.${bestFormat} ${IMAGE_SIZES.medium}w`,
+    `${basePath}-large.${bestFormat} ${IMAGE_SIZES.large}w`,
+    `${basePath}.${bestFormat} ${IMAGE_SIZES.original}w`,
+  ].join(', ');
+};
+
+/**
+ * 預載入多個圖片
+ */
+export const preloadImages = (
+  srcs: string[],
+  options?: {
+    onProgress?: (loaded: number, total: number) => void;
+    batchSize?: number;
+    priority?: string[];
+  }
+): Promise<void> => {
+  const { onProgress, batchSize = 5, priority = [] } = options || {};
+  const imageCache = getImageCache();
+
+  // 按優先級排序
+  const sortedSrcs = [...srcs].sort((a, b) => {
+    const aIndex = priority.indexOf(a);
+    const bIndex = priority.indexOf(b);
+
+    if (aIndex >= 0 && bIndex >= 0) return aIndex - bIndex;
+    if (aIndex >= 0) return -1;
+    if (bIndex >= 0) return 1;
+    return 0;
+  });
+
+  let loadedCount = 0;
+  const total = sortedSrcs.length;
+
+  // 批次載入圖片
+  const loadBatch = async (startIndex: number): Promise<void> => {
+    const batch = sortedSrcs.slice(startIndex, startIndex + batchSize);
+    if (batch.length === 0) return;
+
+    await Promise.all(
+      batch.map(src =>
+        imageCache
+          .preload(src)
+          .then(() => {
+            loadedCount++;
+            onProgress?.(loadedCount, total);
+          })
+          .catch(() => {
+            loadedCount++;
+            onProgress?.(loadedCount, total);
+          })
+      )
+    );
+
+    if (startIndex + batchSize < total) {
+      // 小延遲避免瀏覽器過載
+      await new Promise(resolve => setTimeout(resolve, 100));
+      return loadBatch(startIndex + batchSize);
+    }
+  };
+
+  return loadBatch(0);
+};
+
+/**
  * 生成分享圖片
  * 使用 HTML5 Canvas 創建塔羅牌分享圖片
  */
@@ -93,7 +425,8 @@ const drawCards = async (
 
     // 載入卡牌圖片
     try {
-      const image = await loadImage(card.card.image);
+      // 使用優化後的圖片載入函數
+      const image = await loadImage(card.card.image, { priority: true });
 
       // 保存當前繪圖狀態
       ctx.save();
@@ -132,17 +465,4 @@ const drawCards = async (
       ctx.fillText(card.card.name, x + cardWidth / 2, y + cardHeight / 2);
     }
   }
-};
-
-/**
- * 載入圖片
- */
-const loadImage = (src: string): Promise<HTMLImageElement> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous'; // 允許跨域圖片
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error(`無法載入圖片: ${src}`));
-    img.src = src;
-  });
 };

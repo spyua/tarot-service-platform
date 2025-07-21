@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { TarotCard, TarotDeck, DrawingArea, CardDetails, CardImagePreloader } from './index';
+import {
+  TarotCard,
+  TarotDeck,
+  DrawingArea,
+  CardDetails,
+  CardImagePreloader,
+} from './index';
 import { DrawnCard, TarotCard as TarotCardType } from '../../types';
 
 // Import tarot card data
@@ -18,15 +24,20 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
   // State for demo
   const [selectedCard, setSelectedCard] = useState<DrawnCard | null>(null);
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
-  const [layout, setLayout] = useState<'line' | 'arc' | 'cross' | 'grid' | 'fan' | 'star'>('line');
+  const [layout, setLayout] = useState<
+    'line' | 'arc' | 'cross' | 'grid' | 'fan' | 'star'
+  >('line');
   const [cardCount, setCardCount] = useState(3);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
   const [showPositionLabels, setShowPositionLabels] = useState(true);
   const [showInterpretation, setShowInterpretation] = useState(true);
   const [cardSize, setCardSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('md');
-  const [loadingProgress, setLoadingProgress] = useState({ loaded: 0, total: 0 });
-  
+  const [loadingProgress, setLoadingProgress] = useState({
+    loaded: 0,
+    total: 0,
+  });
+
   // Get all cards from the tarot data
   const allCards: TarotCardType[] = [
     ...tarotData.majorArcana,
@@ -40,27 +51,28 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
   const drawRandomCards = () => {
     setIsShuffling(true);
     setSelectedCard(null);
-    
+
     // Simulate shuffling
     setTimeout(() => {
       setIsShuffling(false);
       setIsDrawing(true);
       setDrawnCards([]);
-      
+
       // Simulate drawing delay
       setTimeout(() => {
         const shuffled = [...allCards].sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, cardCount);
-        
+
         // Create drawn cards with position meanings from interpretation framework
         const framework = interpretationFrameworks[cardCount];
         const newDrawnCards: DrawnCard[] = selected.map((card, index) => ({
           card,
           position: index + 1,
           isReversed: Math.random() < 0.3, // 30% chance of reversed
-          positionMeaning: framework?.positions[index]?.description || `Position ${index + 1}`,
+          positionMeaning:
+            framework?.positions[index]?.description || `Position ${index + 1}`,
         }));
-        
+
         setDrawnCards(newDrawnCards);
         setIsDrawing(false);
       }, 1000);
@@ -84,10 +96,12 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
 
   return (
     <div className={`p-4 ${className}`}>
-      <h2 className="text-2xl font-serif text-purple-900 mb-6 text-center">塔羅牌視覺組件展示</h2>
-      
+      <h2 className="text-2xl font-serif text-purple-900 mb-6 text-center">
+        塔羅牌視覺組件展示
+      </h2>
+
       {/* Card preloader */}
-      <CardImagePreloader 
+      <CardImagePreloader
         cards={allCards}
         priority={drawnCards.map(dc => dc.card.id)}
         onProgress={handleLoadingProgress}
@@ -95,34 +109,37 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
         showIndicator={true}
       >
         {/* Loading status can be accessed here */}
-        {loadingProgress.total > 0 && loadingProgress.loaded < loadingProgress.total && (
-          <div className="text-center text-sm text-gray-500 mb-4">
-            載入圖片中: {loadingProgress.loaded}/{loadingProgress.total}
-          </div>
-        )}
+        {loadingProgress.total > 0 &&
+          loadingProgress.loaded < loadingProgress.total && (
+            <div className="text-center text-sm text-gray-500 mb-4">
+              載入圖片中: {loadingProgress.loaded}/{loadingProgress.total}
+            </div>
+          )}
       </CardImagePreloader>
-      
+
       {/* Controls */}
       <div className="flex flex-wrap gap-4 justify-center mb-6">
         <div>
           <label className="block text-sm text-gray-600 mb-1">卡片數量</label>
-          <select 
+          <select
             className="border rounded px-2 py-1"
             value={cardCount}
-            onChange={(e) => setCardCount(Number(e.target.value))}
+            onChange={e => setCardCount(Number(e.target.value))}
           >
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-              <option key={num} value={num}>{num}</option>
+              <option key={num} value={num}>
+                {num}
+              </option>
             ))}
           </select>
         </div>
-        
+
         <div>
           <label className="block text-sm text-gray-600 mb-1">佈局</label>
-          <select 
+          <select
             className="border rounded px-2 py-1"
             value={layout}
-            onChange={(e) => setLayout(e.target.value as any)}
+            onChange={e => setLayout(e.target.value as any)}
           >
             <option value="line">直線</option>
             <option value="arc">弧形</option>
@@ -132,13 +149,13 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
             <option value="grid">網格</option>
           </select>
         </div>
-        
+
         <div>
           <label className="block text-sm text-gray-600 mb-1">卡片大小</label>
-          <select 
+          <select
             className="border rounded px-2 py-1"
             value={cardSize}
-            onChange={(e) => setCardSize(e.target.value as any)}
+            onChange={e => setCardSize(e.target.value as any)}
           >
             <option value="sm">小</option>
             <option value="md">中</option>
@@ -146,9 +163,9 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
             <option value="xl">特大</option>
           </select>
         </div>
-        
+
         <div className="flex items-end">
-          <button 
+          <button
             className="bg-purple-600 text-white px-4 py-1 rounded hover:bg-purple-700 disabled:opacity-50"
             onClick={drawRandomCards}
             disabled={isDrawing || isShuffling}
@@ -157,44 +174,44 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
           </button>
         </div>
       </div>
-      
+
       {/* Display options */}
       <div className="flex flex-wrap gap-6 justify-center mb-6">
         <label className="flex items-center">
-          <input 
-            type="checkbox" 
-            checked={showPositionLabels} 
-            onChange={(e) => setShowPositionLabels(e.target.checked)}
+          <input
+            type="checkbox"
+            checked={showPositionLabels}
+            onChange={e => setShowPositionLabels(e.target.checked)}
             className="mr-2"
           />
           <span className="text-sm text-gray-600">顯示位置標籤</span>
         </label>
-        
+
         <label className="flex items-center">
-          <input 
-            type="checkbox" 
-            checked={showInterpretation} 
-            onChange={(e) => setShowInterpretation(e.target.checked)}
+          <input
+            type="checkbox"
+            checked={showInterpretation}
+            onChange={e => setShowInterpretation(e.target.checked)}
             className="mr-2"
           />
           <span className="text-sm text-gray-600">顯示解讀框架</span>
         </label>
       </div>
-      
+
       {/* Card deck */}
       <div className="flex justify-center mb-8">
-        <TarotDeck 
-          cardCount={78 - drawnCards.length} 
+        <TarotDeck
+          cardCount={78 - drawnCards.length}
           onClick={drawRandomCards}
           disabled={isDrawing}
           isShuffling={isShuffling}
           size="md"
         />
       </div>
-      
+
       {/* Drawing area */}
       <div className="mb-8 h-96 border border-gray-200 rounded-lg bg-gradient-to-b from-purple-50 to-white">
-        <DrawingArea 
+        <DrawingArea
           drawnCards={drawnCards}
           layout={layout}
           maxCards={cardCount}
@@ -206,7 +223,7 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
           showInterpretation={showInterpretation}
         />
       </div>
-      
+
       {/* Selected card details */}
       {selectedCard && (
         <div className="max-w-2xl mx-auto mt-12 bg-white rounded-lg shadow-lg p-6">
@@ -221,47 +238,53 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
           </div>
         </div>
       )}
-      
+
       {/* Card examples */}
       <div className="mt-12 bg-white rounded-lg shadow p-6">
-        <h3 className="text-xl font-serif text-purple-900 mb-4">卡片樣式展示</h3>
+        <h3 className="text-xl font-serif text-purple-900 mb-4">
+          卡片樣式展示
+        </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
           {/* Regular card */}
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">正位牌</h4>
-            <TarotCard card={allCards[0]} size="sm" />
+            {allCards[0] && <TarotCard card={allCards[0]} size="sm" />}
           </div>
-          
+
           {/* Reversed card */}
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">逆位牌</h4>
-            <TarotCard 
-              drawnCard={{
-                card: allCards[1],
-                position: 1,
-                isReversed: true
-              }} 
-              size="sm" 
-            />
+            {allCards[1] && (
+              <TarotCard
+                drawnCard={{
+                  card: allCards[1],
+                  position: 1,
+                  isReversed: true,
+                }}
+                size="sm"
+              />
+            )}
           </div>
-          
+
           {/* Card back */}
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">牌背</h4>
             <TarotCard showBack size="sm" />
           </div>
-          
+
           {/* Flip animation */}
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">翻牌動畫</h4>
-            <TarotCard 
-              card={allCards[2]} 
-              size="sm" 
-              flipAnimation={true} 
-              showBack={Math.floor(Date.now() / 1000) % 2 === 0} 
-            />
+            {allCards[2] && (
+              <TarotCard
+                card={allCards[2]}
+                size="sm"
+                flipAnimation={true}
+                showBack={Math.floor(Date.now() / 1000) % 2 === 0}
+              />
+            )}
           </div>
-          
+
           {/* Loading state */}
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">載入中</h4>
@@ -269,7 +292,7 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
               <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-500"></div>
             </div>
           </div>
-          
+
           {/* Error state */}
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">錯誤狀態</h4>
@@ -282,26 +305,28 @@ const TarotCardDemo: React.FC<TarotCardDemoProps> = ({ className = '' }) => {
           </div>
         </div>
       </div>
-      
+
       {/* Card sizes */}
       <div className="mt-12 bg-white rounded-lg shadow p-6">
-        <h3 className="text-xl font-serif text-purple-900 mb-4">卡片尺寸展示</h3>
+        <h3 className="text-xl font-serif text-purple-900 mb-4">
+          卡片尺寸展示
+        </h3>
         <div className="flex flex-wrap justify-center gap-8">
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">小 (sm)</h4>
             <TarotCard card={allCards[3]} size="sm" />
           </div>
-          
+
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">中 (md)</h4>
             <TarotCard card={allCards[3]} size="md" />
           </div>
-          
+
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">大 (lg)</h4>
             <TarotCard card={allCards[3]} size="lg" />
           </div>
-          
+
           <div className="flex flex-col items-center">
             <h4 className="text-sm text-gray-600 mb-2">特大 (xl)</h4>
             <TarotCard card={allCards[3]} size="xl" />

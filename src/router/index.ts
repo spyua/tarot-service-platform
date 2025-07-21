@@ -9,6 +9,9 @@ const History = lazy(() => import('@/pages/History/History'));
 const Settings = lazy(() => import('@/pages/Settings/Settings'));
 const AnimationTest = lazy(() => import('@/pages/AnimationTestPage'));
 const TarotCardTest = lazy(() => import('@/pages/TarotCardTestPage'));
+const ImageOptimizationDemo = lazy(
+  () => import('@/pages/ImageOptimizationDemo')
+);
 
 // Define route configuration
 export const routes: RouteObject[] = [
@@ -42,6 +45,10 @@ export const routes: RouteObject[] = [
     element: React.createElement(TarotCardTest),
   },
   {
+    path: '/image-optimization-demo',
+    element: React.createElement(ImageOptimizationDemo),
+  },
+  {
     path: '*',
     element: React.createElement('div', {}, '頁面未找到 / Page Not Found'),
   },
@@ -56,6 +63,7 @@ export const ROUTES = {
   SETTINGS: '/settings',
   ANIMATION_TEST: '/animation-test',
   TAROT_CARD_TEST: '/tarot-card-test',
+  IMAGE_OPTIMIZATION_DEMO: '/image-optimization-demo',
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

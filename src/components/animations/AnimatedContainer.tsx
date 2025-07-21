@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion, AnimatePresence, MotionProps } from 'framer-motion';
 import { useAnimation } from './AnimationContext';
-import { 
-  pageTransitionVariants, 
+import {
+  pageTransitionVariants,
   fadeTransitionVariants,
   slideTransitionVariants,
   scaleTransitionVariants,
-  mysticalTransitionVariants
+  mysticalTransitionVariants,
 } from './pageTransitions';
 
 type TransitionType = 'page' | 'fade' | 'slide' | 'scale' | 'mystical' | 'none';
@@ -37,30 +37,35 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   ...motionProps
 }) => {
   const { animationsEnabled, getAnimationDuration } = useAnimation();
-  
+
   // If animations are disabled, render without motion
   if (!animationsEnabled || transitionType === 'none') {
     return <div className={className}>{children}</div>;
   }
-  
+
   // Select transition variants based on type
   const getVariants = () => {
     switch (transitionType) {
-      case 'fade': return fadeTransitionVariants;
-      case 'slide': return slideTransitionVariants;
-      case 'scale': return scaleTransitionVariants;
-      case 'mystical': return mysticalTransitionVariants;
+      case 'fade':
+        return fadeTransitionVariants;
+      case 'slide':
+        return slideTransitionVariants;
+      case 'scale':
+        return scaleTransitionVariants;
+      case 'mystical':
+        return mysticalTransitionVariants;
       case 'page':
-      default: return pageTransitionVariants;
+      default:
+        return pageTransitionVariants;
     }
   };
-  
+
   // Adjust transition settings for staggered children
   const getTransition = () => {
     if (staggerChildren) {
       return {
         staggerChildren: getAnimationDuration(staggerDelay),
-        delayChildren: getAnimationDuration(0.1)
+        delayChildren: getAnimationDuration(0.1),
       };
     }
     return {};
@@ -74,7 +79,7 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
         animate="animate"
         exit="exit"
         variants={getVariants()}
-        layoutId={layoutId}
+        layoutId={layoutId || undefined}
         custom={transitionType === 'slide' ? slideDirection : undefined}
         transition={getTransition()}
         {...motionProps}

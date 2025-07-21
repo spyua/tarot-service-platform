@@ -19,3 +19,4 @@ export { default as ShareButton } from './ShareButton';
 export { default as ShareModal } from './ShareModal';
 export { default as SharePreview } from './SharePreview';
 export { default as PrivacySettings } from './PrivacySettings';
+export { default as ResponsiveImage } from './ResponsiveImage';
