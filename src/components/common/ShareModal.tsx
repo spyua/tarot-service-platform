@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ReadingResult, SharePlatform, ShareOptions, PrivacySettings } from '../../types';
+import {
+  ReadingResult,
+  SharePlatform,
+  ShareOptions,
+  PrivacySettings,
+} from '../../types';
 import { sharingService } from '../../services/SharingService';
 import { privacyManager } from '../../services/PrivacyManager';
+import SharePreview from './SharePreview';
 import Modal from './Modal';
 import Button from './Button';
 import Switch from './Switch';
@@ -20,23 +26,32 @@ interface ShareModalProps {
 const ShareModal: React.FC<ShareModalProps> = ({
   isOpen,
   onClose,
-  reading
+  reading,
 }) => {
-  const [shareOptions, setShareOptions] = useState<Omit<ShareOptions, 'platform'>>({
+  const [shareOptions, setShareOptions] = useState<
+    Omit<ShareOptions, 'platform'>
+  >({
     includeImage: false,
     includeInterpretation: false,
-    includeQuestion: false
+    includeQuestion: false,
   });
-  
+
   const [privacySettings, setPrivacySettings] = useState<PrivacySettings>(
     privacyManager.getSettings()
   );
-  
+
   const [isSharing, setIsSharing] = useState(false);
-  const [selectedPlatform, setSelectedPlatform] = useState<SharePlatform | null>(null);
+  const [selectedPlatform, setSelectedPlatform] =
+    useState<SharePlatform | null>(null);
 
   // 可用的分享平台
-  const platforms: SharePlatform[] = ['facebook', 'twitter', 'line', 'instagram', 'copy'];
+  const platforms: SharePlatform[] = [
+    'facebook',
+    'twitter',
+    'line',
+    'instagram',
+    'copy',
+  ];
 
   // 載入設定
   useEffect(() => {
@@ -46,14 +61,20 @@ const ShareModal: React.FC<ShareModalProps> = ({
   }, [isOpen]);
 
   // 處理隱私設定變更
-  const handlePrivacySettingChange = (key: keyof PrivacySettings, value: boolean) => {
+  const handlePrivacySettingChange = (
+    key: keyof PrivacySettings,
+    value: boolean
+  ) => {
     const newSettings = { ...privacySettings, [key]: value };
     setPrivacySettings(newSettings);
     privacyManager.saveSettings({ [key]: value });
   };
 
   // 處理分享選項變更
-  const handleShareOptionChange = (key: keyof Omit<ShareOptions, 'platform'>, value: boolean) => {
+  const handleShareOptionChange = (
+    key: keyof Omit<ShareOptions, 'platform'>,
+    value: boolean
+  ) => {
     setShareOptions(prev => ({ ...prev, [key]: value }));
   };
 
@@ -65,18 +86,21 @@ const ShareModal: React.FC<ShareModalProps> = ({
     try {
       const fullShareOptions: ShareOptions = {
         ...shareOptions,
-        platform
+        platform,
       };
 
-      const shareContent = sharingService.generateShareContent(reading, fullShareOptions);
-      
+      const shareContent = await sharingService.generateShareContent(
+        reading,
+        fullShareOptions
+      );
+
       if (!shareContent) {
         alert('無法生成分享內容，請檢查隱私設定。');
         return;
       }
 
       const success = await sharingService.share(platform, shareContent);
-      
+
       if (success) {
         if (platform === 'copy') {
           alert('內容已複製到剪貼簿！');
@@ -85,7 +109,9 @@ const ShareModal: React.FC<ShareModalProps> = ({
         }
         onClose();
       } else {
-        alert(`分享到 ${sharingService.getPlatformDisplayName(platform)} 失敗，請稍後再試。`);
+        alert(
+          `分享到 ${sharingService.getPlatformDisplayName(platform)} 失敗，請稍後再試。`
+        );
       }
     } catch (error) {
       console.error('分享失敗:', error);
@@ -99,7 +125,8 @@ const ShareModal: React.FC<ShareModalProps> = ({
   // 渲染平台按鈕
   const renderPlatformButton = (platform: SharePlatform) => {
     const isLoading = isSharing && selectedPlatform === platform;
-    const isDisabled = isSharing || !sharingService.isPlatformAvailable(platform);
+    const isDisabled =
+      isSharing || !sharingService.isPlatformAvailable(platform);
 
     return (
       <Button
@@ -111,9 +138,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
         className="flex items-center justify-center gap-2 p-4 h-auto"
       >
         <div className="text-center">
-          <div className="text-2xl mb-1">
-            {getPlatformEmoji(platform)}
-          </div>
+          <div className="text-2xl mb-1">{getPlatformEmoji(platform)}</div>
           <div className="text-sm font-medium">
             {sharingService.getPlatformDisplayName(platform)}
           </div>
@@ -129,13 +154,18 @@ const ShareModal: React.FC<ShareModalProps> = ({
       twitter: '🐦',
       instagram: '📷',
       line: '💬',
-      copy: '📋'
+      copy: '📋',
     };
     return emojis[platform] || '📤';
   };
 
   // 檢查是否可以分享特定內容
-  const canShareContent = (contentType: keyof Omit<PrivacySettings, 'allowSharing' | 'anonymousAnalytics'>): boolean => {
+  const canShareContent = (
+    contentType: keyof Omit<
+      PrivacySettings,
+      'allowSharing' | 'anonymousAnalytics'
+    >
+  ): boolean => {
     return privacySettings.allowSharing && privacySettings[contentType];
   };
 
@@ -159,7 +189,9 @@ const ShareModal: React.FC<ShareModalProps> = ({
               </div>
               <Switch
                 checked={privacySettings.allowSharing}
-                onChange={(checked) => handlePrivacySettingChange('allowSharing', checked)}
+                onChange={checked =>
+                  handlePrivacySettingChange('allowSharing', checked)
+                }
               />
             </div>
 
@@ -182,7 +214,9 @@ const ShareModal: React.FC<ShareModalProps> = ({
                     </div>
                     <Switch
                       checked={privacySettings.shareCardNames}
-                      onChange={(checked) => handlePrivacySettingChange('shareCardNames', checked)}
+                      onChange={checked =>
+                        handlePrivacySettingChange('shareCardNames', checked)
+                      }
                     />
                   </div>
 
@@ -197,7 +231,12 @@ const ShareModal: React.FC<ShareModalProps> = ({
                     </div>
                     <Switch
                       checked={privacySettings.shareInterpretation}
-                      onChange={(checked) => handlePrivacySettingChange('shareInterpretation', checked)}
+                      onChange={checked =>
+                        handlePrivacySettingChange(
+                          'shareInterpretation',
+                          checked
+                        )
+                      }
                     />
                   </div>
 
@@ -212,7 +251,9 @@ const ShareModal: React.FC<ShareModalProps> = ({
                     </div>
                     <Switch
                       checked={privacySettings.shareQuestion}
-                      onChange={(checked) => handlePrivacySettingChange('shareQuestion', checked)}
+                      onChange={checked =>
+                        handlePrivacySettingChange('shareQuestion', checked)
+                      }
                     />
                   </div>
                 </motion.div>
@@ -239,7 +280,9 @@ const ShareModal: React.FC<ShareModalProps> = ({
                 </div>
                 <Switch
                   checked={shareOptions.includeImage}
-                  onChange={(checked) => handleShareOptionChange('includeImage', checked)}
+                  onChange={checked =>
+                    handleShareOptionChange('includeImage', checked)
+                  }
                 />
               </div>
 
@@ -253,8 +296,13 @@ const ShareModal: React.FC<ShareModalProps> = ({
                   </p>
                 </div>
                 <Switch
-                  checked={shareOptions.includeInterpretation && canShareContent('shareInterpretation')}
-                  onChange={(checked) => handleShareOptionChange('includeInterpretation', checked)}
+                  checked={
+                    shareOptions.includeInterpretation &&
+                    canShareContent('shareInterpretation')
+                  }
+                  onChange={checked =>
+                    handleShareOptionChange('includeInterpretation', checked)
+                  }
                   disabled={!canShareContent('shareInterpretation')}
                 />
               </div>
@@ -269,13 +317,23 @@ const ShareModal: React.FC<ShareModalProps> = ({
                   </p>
                 </div>
                 <Switch
-                  checked={shareOptions.includeQuestion && canShareContent('shareQuestion')}
-                  onChange={(checked) => handleShareOptionChange('includeQuestion', checked)}
+                  checked={
+                    shareOptions.includeQuestion &&
+                    canShareContent('shareQuestion')
+                  }
+                  onChange={checked =>
+                    handleShareOptionChange('includeQuestion', checked)
+                  }
                   disabled={!canShareContent('shareQuestion')}
                 />
               </div>
             </div>
           </div>
+        )}
+
+        {/* 分享預覽 */}
+        {privacySettings.allowSharing && (
+          <SharePreview reading={reading} shareOptions={shareOptions} />
         )}
 
         {/* 分享平台選擇 */}
@@ -294,11 +352,23 @@ const ShareModal: React.FC<ShareModalProps> = ({
         {!privacySettings.allowSharing && (
           <div className="text-center py-8">
             <div className="text-gray-500 dark:text-gray-400 mb-4">
-              <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636" />
+              <svg
+                className="w-16 h-16 mx-auto mb-4 opacity-50"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636"
+                />
               </svg>
               <p className="text-lg font-medium">分享功能已禁用</p>
-              <p className="text-sm mt-2">請啟用「允許分享」選項以使用分享功能</p>
+              <p className="text-sm mt-2">
+                請啟用「允許分享」選項以使用分享功能
+              </p>
             </div>
           </div>
         )}

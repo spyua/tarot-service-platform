@@ -4,3 +4,4 @@
 export * from './animations';
 export * from './dateUtils';
 export * from './analysisUtils';
+export * from './imageUtils';
